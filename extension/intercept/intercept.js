@@ -5,6 +5,275 @@ const logId = urlParams.get('logId');
 
 document.getElementById('blockedUrl').textContent = blockedUrl;
 
+// Global variables for chat system
+let interventionContent = null;
+let currentRequiredText = null;
+
+// Load dynamic content from JSON
+async function loadInterventionContent() {
+  try {
+    const contentUrl = chrome.runtime.getURL('assets/interventionContent.json');
+    const response = await fetch(contentUrl);
+    const content = await response.json();
+    console.log('📋 Loaded intervention content:', content);
+    return content;
+  } catch (error) {
+    console.error('❌ Failed to load intervention content:', error);
+    return null;
+  }
+}
+
+// Helper function to get random item from array
+function getRandomItem(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
+// Add typing dots animation
+function addTypingDots(avatar) {
+  const chatMessages = document.getElementById('chatMessages');
+  
+  const typingDiv = document.createElement('div');
+  typingDiv.className = 'chat-message persona';
+  typingDiv.id = 'typing-indicator';
+  
+  typingDiv.innerHTML = `
+    <div class="chat-avatar persona">${avatar}</div>
+    <div class="typing-dots">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>
+  `;
+  
+  chatMessages.appendChild(typingDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  
+  return typingDiv;
+}
+
+// Remove typing dots
+function removeTypingDots() {
+  const typingIndicator = document.getElementById('typing-indicator');
+  if (typingIndicator) {
+    typingIndicator.remove();
+  }
+}
+
+// Add message to chat with optional typing animation
+function addChatMessage(text, type, avatar, showTyping = false) {
+  const chatMessages = document.getElementById('chatMessages');
+  
+  if (showTyping && type === 'persona') {
+    // Show typing dots first
+    const typingDiv = addTypingDots(avatar);
+    
+    // After delay, remove typing and show actual message
+    setTimeout(() => {
+      removeTypingDots();
+      
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `chat-message ${type}`;
+      
+      messageDiv.innerHTML = `
+        <div class="chat-avatar ${type}">${avatar}</div>
+        <div class="chat-bubble ${type}">${text}</div>
+      `;
+      
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }, 1500); // 1.5 second typing animation
+  } else {
+    // Show message immediately
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chat-message ${type}`;
+    
+    messageDiv.innerHTML = `
+      <div class="chat-avatar ${type}">${avatar}</div>
+      <div class="chat-bubble ${type}">${text}</div>
+    `;
+    
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+}
+
+// Show user response buttons
+function showUserButtons() {
+  const inputArea = document.getElementById('chatInputArea');
+  inputArea.style.display = 'block';
+  
+  inputArea.innerHTML = `
+    <div class="chat-buttons">
+      <button class="chat-btn primary" id="letMeGoBtn">Let me go</button>
+      <button class="chat-btn secondary" id="skipBtn">OK, I will skip</button>
+    </div>
+  `;
+  
+  // Add event listeners
+  document.getElementById('letMeGoBtn').addEventListener('click', handleLetMeGo);
+  document.getElementById('skipBtn').addEventListener('click', handleSkip);
+}
+
+// Handle "Let me go" button
+function handleLetMeGo() {
+  // Add user message
+  addChatMessage('Let me go', 'user', '👤');
+  
+  // Hide input area temporarily
+  document.getElementById('chatInputArea').style.display = 'none';
+  
+  // Generate angry response after a delay
+  setTimeout(() => {
+    const angryComment = getRandomItem(interventionContent.angryComments);
+    
+    // Pick a random angryAsk object
+    const angryAskObj = getRandomItem(interventionContent.angryAsks);
+    const angryVerb = angryAskObj.verb;
+    const angryAsk = getRandomItem(angryAskObj.asks);
+    
+    // Store the required text for validation
+    currentRequiredText = angryAsk;
+    
+    const fullResponse = `${angryComment} ${angryVerb}: "${angryAsk}"`;
+    addChatMessage(fullResponse, 'persona', interventionContent.avatar, true);
+    
+    // Show text input after another delay
+    setTimeout(() => {
+      showTextInput(angryAsk);
+    }, 1000);
+  }, 1500);
+}
+
+// Handle "OK, I will skip" button  
+function handleSkip() {
+  // Add user message
+  addChatMessage('OK, I will skip', 'user', '👤');
+  
+  // Hide chat input area
+  document.getElementById('chatInputArea').style.display = 'none';
+  
+  // Show success message from persona
+  setTimeout(() => {
+    const happyComment = getRandomItem(interventionContent.happyComments);
+    addChatMessage(happyComment, 'persona', interventionContent.avatar, true);
+    
+    // Update log to "Blocked" and close tab after celebrating the good choice
+    setTimeout(() => {
+      addChatMessage('This tab will close now. Go focus on what matters! 💪', 'persona', interventionContent.avatar, true);
+      
+      setTimeout(() => {
+        chrome.runtime.sendMessage({
+          action: 'blockAccess',
+          tabId: tabId,
+          logId: logId
+        });
+      }, 1500);
+    }, 1500);
+  }, 1000);
+}
+
+// Show text input for validation
+function showTextInput(requiredText) {
+  const inputArea = document.getElementById('chatInputArea');
+  inputArea.style.display = 'block';
+  
+  inputArea.innerHTML = `
+    <div class="chat-instruction">
+      Type exactly: "<strong>${requiredText}</strong>"
+    </div>
+    <div class="chat-text-input">
+      <input type="text" id="validationInput" placeholder="Type the exact text above..." autocomplete="off">
+      <div class="chat-error-message" id="errorMessage" style="display: none;"></div>
+    </div>
+    <div class="chat-buttons" style="margin-top: 15px;">
+      <button class="chat-btn primary" id="submitBtn">Submit</button>
+    </div>
+  `;
+  
+  // Focus on input
+  document.getElementById('validationInput').focus();
+  
+  // Add event listeners
+  document.getElementById('submitBtn').addEventListener('click', validateText);
+  
+  // Handle Enter key
+  document.getElementById('validationInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      validateText();
+    }
+  });
+}
+
+// Validate typed text
+function validateText() {
+  const input = document.getElementById('validationInput');
+  const errorMessage = document.getElementById('errorMessage');
+  const typedText = input.value;
+  
+  if (typedText === currentRequiredText) {
+    // Correct! Add user message and proceed
+    addChatMessage(typedText, 'user', '👤');
+    
+    // Hide input area
+    document.getElementById('chatInputArea').style.display = 'none';
+    
+    // Show final persona message and then duration modal
+    setTimeout(() => {
+      addChatMessage('Fine... You can go. But remember this choice.', 'persona', interventionContent.avatar, true);
+      
+      // Show duration modal after final message
+      setTimeout(() => {
+        document.getElementById('durationModal').classList.add('show');
+      }, 2000);
+    }, 1000);
+    
+  } else {
+    // Incorrect - show error
+    input.parentElement.classList.add('error');
+    errorMessage.style.display = 'block';
+    errorMessage.textContent = 'Not quite right. Type it exactly as shown above.';
+    
+    // Clear error after user starts typing again
+    input.addEventListener('input', function() {
+      input.parentElement.classList.remove('error');
+      errorMessage.style.display = 'none';
+    }, { once: true });
+  }
+}
+
+// Initialize chat conversation
+async function initializeChat() {
+  const rawContent = await loadInterventionContent();
+  
+  if (!rawContent || !rawContent.personas || rawContent.personas.length === 0) {
+    console.error('❌ Could not load intervention content, falling back to simple mode');
+    return false;
+  }
+  
+  // Use the first persona from the array
+  interventionContent = rawContent.personas[0];
+  
+  // Add avatar if not present
+  if (!interventionContent.avatar) {
+    interventionContent.avatar = '👤'; // Default avatar
+  }
+  
+  console.log('✅ Loaded persona:', interventionContent.name);
+  
+  // Start conversation with random first comment
+  setTimeout(() => {
+    const firstComment = getRandomItem(interventionContent.firstComments);
+    addChatMessage(firstComment, 'persona', interventionContent.avatar, true);
+    
+    // Show user response buttons after persona speaks
+    setTimeout(() => {
+      showUserButtons();
+    }, 1500);
+  }, 500);
+  
+  return true;
+}
+
 function displayDebugInfo() {
   const currentDomain = new URL(blockedUrl).hostname.replace('www.', '').replace('m.', '');
   const currentTime = new Date().toLocaleString();
@@ -133,18 +402,12 @@ document.getElementById('debugToggle').addEventListener('click', () => {
   }
 });
 
-// Don't load debug info by default anymore - only when toggled
+// Initialize chat conversation when page loads
+initializeChat();
 
 console.log(`🔵 INTERCEPT: Page loaded for ${blockedUrl}, tabId: ${tabId}, logId: ${logId}`);
 
-document.getElementById('yesBtn').addEventListener('click', () => {
-  console.log(`🟡 INTERCEPT: User clicked 'Yes, Continue' button`);
-  // Show duration modal
-  document.getElementById('durationModal').classList.add('show');
-  console.log(`🟡 INTERCEPT: Duration modal shown`);
-});
-
-// Handle duration selection
+// Handle duration selection (for modal)
 document.querySelectorAll('.duration-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const minutes = parseInt(btn.dataset.minutes);
@@ -170,16 +433,6 @@ document.querySelectorAll('.duration-btn').forEach(btn => {
       console.log(`🟢 INTERCEPT: Redirecting to original URL`);
       window.location.href = blockedUrl;
     });
-  });
-});
-
-document.getElementById('noBtn').addEventListener('click', () => {
-  console.log(`🔴 INTERCEPT: User clicked 'No, Go Back' button`);
-  console.log(`🔴 INTERCEPT: Sending blockAccess message`);
-  chrome.runtime.sendMessage({
-    action: 'blockAccess',
-    tabId: tabId,
-    logId: logId
   });
 });
 

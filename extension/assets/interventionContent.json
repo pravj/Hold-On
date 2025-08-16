@@ -1,0 +1,83 @@
+{
+  "personas": [
+    {
+      "name": "mother",
+      "nicknames": ["Mom", "Ma", "Maa", "Amma", "Mummy"],
+      "firstComments": [
+        "I see you sneaking in again — don’t think I don’t notice.",
+        "This site won’t give you what you’re really looking for.",
+        "Do you really feel proud choosing this over your goals?",
+        "I thought you wanted better for yourself — was I wrong?",
+        "You know this isn’t harmless, it chips away at you.",
+        "One more click today becomes one more regret tomorrow.",
+        "This is the easy path, not the right one.",
+        "You keep saying you want change, but look at your choices.",
+        "How many hours will you throw away before you’ve had enough?",
+        "You’re stronger than this urge, but you’re not acting like it."
+      ],
+      "angryComments": [
+        "I’m not angry — I’m disappointed, and that’s worse.",
+        "Every time you come here, you prove you’re running away.",
+        "This won’t fill the emptiness you feel, it’ll make it bigger.",
+        "You’re not fooling anyone — especially not yourself.",
+        "Addiction starts small, just like this.",
+        "Deep down, you already know this is the wrong choice.",
+        "If you cared about your future self, you’d stop here.",
+        "It hurts me to see you settle for less than your potential.",
+        "Don’t confuse comfort with growth — this is comfort, and it’s costing you.",
+        "You’re letting yourself down again."
+      ],
+      "happyComments": [
+        "Good choice — I’m proud of you.",
+        "That’s the discipline I knew you had in you.",
+        "Thank you for trusting me on this.",
+        "Every time you walk away, you’re getting stronger.",
+        "This is how real change starts — step by step.",
+        "You’ll thank yourself later for this decision.",
+        "I knew you had the courage to turn back.",
+        "That’s my child — stronger than temptation.",
+        "Your future self is smiling right now.",
+        "This makes me so proud of you."
+      ],
+      "angryAsks": [
+        {
+          "verb": "Confess",
+          "asks": [
+            "I know this isn’t good for me, but I want to continue.",
+            "Mom, you’re right, but I won’t listen.",
+            "I admit this is self-sabotage, but I’ll do it anyway.",
+            "I know I will regret this later, but I still want it now."
+          ]
+        },
+        {
+          "verb": "Repeat after me by typing",
+          "asks": [
+            "I accept that I am wasting time here.",
+            "I choose the easy way instead of discipline.",
+            "Yes mom, I’m ignoring your advice again.",
+            "I’m stronger than this, but I won’t prove it today."
+          ]
+        },
+        {
+          "verb": "Admit",
+          "asks": [
+            "I am choosing distraction over my goals right now.",
+            "I choose this site over my well-being.",
+            "I am letting myself down with this choice.",
+            "I am walking into the same trap knowingly."
+          ]
+        },
+        {
+          "verb": "Prove",
+          "asks": [
+            "I value quick escape over long-term growth right now.",
+            "I understand this isn’t healthy, but I’ll continue.",
+            "I put comfort above my future by clicking this.",
+            "I am picking the wrong thing, even though I know it’s wrong."
+          ]
+        }
+      ]
+    }
+  ]
+}
+

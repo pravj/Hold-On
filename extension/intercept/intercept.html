@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hold On - Take a Moment</title>
+  <link rel="stylesheet" href="intercept.css">
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <h1>🛑 Hold On</h1>
+      <p class="message">You're about to visit a blocked site:</p>
+      <p class="url" id="blockedUrl"></p>
+      <!-- Chat Conversation Interface -->
+      <div class="chat-container">
+        <div class="chat-messages" id="chatMessages">
+          <!-- Messages will be added dynamically -->
+        </div>
+        
+        <!-- User response area (initially hidden until persona speaks) -->
+        <div class="chat-input-area" id="chatInputArea" style="display: none;">
+          <!-- Will be populated dynamically based on conversation state -->
+        </div>
+      </div>
+      
+      <!-- Debug toggle (moved to bottom) -->
+      <div class="debug-toggle-container">
+        <button id="debugToggle" class="debug-toggle-btn">🔧 Show Debug Info</button>
+      </div>
+      
+      <div id="debugContainer" class="debug-container" style="display: none;">
+        <h3>🐛 Debug Info</h3>
+        <div id="debugInfo" class="debug-info"></div>
+        
+        <h3>🔍 Blocking Decision Trace</h3>
+        <div id="blockingTrace" class="blocking-trace"></div>
+        
+        <h3>Recent Logs</h3>
+        <div id="logsDisplay" class="logs-display"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Duration Modal -->
+  <div id="durationModal" class="modal-overlay">
+    <div class="modal-content">
+      <h3>How long do you need?</h3>
+      <p>Choose duration to allow this site:</p>
+      <div class="duration-grid">
+        <button class="duration-btn" data-minutes="2">2 min</button>
+        <button class="duration-btn" data-minutes="5">5 min</button>
+        <button class="duration-btn" data-minutes="10">10 min</button>
+        <button class="duration-btn" data-minutes="15">15 min</button>
+      </div>
+    </div>
+  </div>
+  
+  <script src="intercept.js"></script>
+</body>
+</html>

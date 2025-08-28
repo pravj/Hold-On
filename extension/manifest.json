@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Hold On",
   "version": "1.0.0",
-  "description": "Block distracting websites with a confirmation prompt and log your decisions",
+  "description": "Help cut down on unnecessary browsing habits by providing a different perspective",
   
   "permissions": [
     "storage",

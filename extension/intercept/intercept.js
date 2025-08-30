@@ -1,438 +1,289 @@
+// Get URL parameters
 const urlParams = new URLSearchParams(window.location.search);
 const blockedUrl = decodeURIComponent(urlParams.get('blocked'));
 const tabId = parseInt(urlParams.get('tabId'));
 const logId = urlParams.get('logId');
 
-document.getElementById('blockedUrl').textContent = blockedUrl;
+// Global variables
+let slogansData = null;
+let userInterests = [];
 
-// Global variables for chat system
-let interventionContent = null;
-let currentRequiredText = null;
+// Load necessary data and initialize page
+document.addEventListener('DOMContentLoaded', async function() {
+  console.log('🚀 Intercept page loaded for:', blockedUrl);
+  
+  // Set the blocked URL
+  document.getElementById('blockedUrl').textContent = blockedUrl;
+  
+  // Load slogans and user interests
+  await loadSlogans();
+  await loadUserInterests();
+  
+  // Calculate and display time spent today (this will also display the slogan)
+  await displayTimeSpent();
+  
+  // Set up event listeners
+  setupEventListeners();
+  
+  // Set up debug functionality
+  setupDebugMode();
+});
 
-// Load dynamic content from JSON
-async function loadInterventionContent() {
+// Load slogans from JSON file
+async function loadSlogans() {
   try {
-    const contentUrl = chrome.runtime.getURL('assets/interventionContent.json');
-    const response = await fetch(contentUrl);
-    const content = await response.json();
-    console.log('📋 Loaded intervention content:', content);
-    return content;
+    const slogansUrl = chrome.runtime.getURL('assets/slogans.json');
+    const response = await fetch(slogansUrl);
+    slogansData = await response.json();
+    console.log('✅ Loaded slogans data');
   } catch (error) {
-    console.error('❌ Failed to load intervention content:', error);
-    return null;
+    console.error('❌ Failed to load slogans:', error);
+    // Fallback slogans
+    slogansData = {
+      others: ["Take a moment to reflect on what truly matters to you."]
+    };
   }
 }
 
-// Helper function to get random item from array
-function getRandomItem(array) {
-  return array[Math.floor(Math.random() * array.length)];
-}
-
-// Add typing dots animation
-function addTypingDots(avatar) {
-  const chatMessages = document.getElementById('chatMessages');
-  
-  const typingDiv = document.createElement('div');
-  typingDiv.className = 'chat-message persona';
-  typingDiv.id = 'typing-indicator';
-  
-  typingDiv.innerHTML = `
-    <div class="chat-avatar persona">${avatar}</div>
-    <div class="typing-dots">
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
-    </div>
-  `;
-  
-  chatMessages.appendChild(typingDiv);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-  
-  return typingDiv;
-}
-
-// Remove typing dots
-function removeTypingDots() {
-  const typingIndicator = document.getElementById('typing-indicator');
-  if (typingIndicator) {
-    typingIndicator.remove();
-  }
-}
-
-// Add message to chat with optional typing animation
-function addChatMessage(text, type, avatar, showTyping = false) {
-  const chatMessages = document.getElementById('chatMessages');
-  
-  if (showTyping && type === 'persona') {
-    // Show typing dots first
-    const typingDiv = addTypingDots(avatar);
-    
-    // After delay, remove typing and show actual message
-    setTimeout(() => {
-      removeTypingDots();
+// Load user interests from storage
+async function loadUserInterests() {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['userInterests'], (result) => {
+      userInterests = result.userInterests || [];
+      console.log('✅ Loaded user interests:', userInterests);
       
-      const messageDiv = document.createElement('div');
-      messageDiv.className = `chat-message ${type}`;
+      // If no interests selected, default to "others"
+      if (userInterests.length === 0) {
+        userInterests = ['others'];
+        console.log('ℹ️ No interests found, using default: others');
+      }
       
-      messageDiv.innerHTML = `
-        <div class="chat-avatar ${type}">${avatar}</div>
-        <div class="chat-bubble ${type}">${text}</div>
-      `;
-      
-      chatMessages.appendChild(messageDiv);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }, 1500); // 1.5 second typing animation
-  } else {
-    // Show message immediately
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `chat-message ${type}`;
-    
-    messageDiv.innerHTML = `
-      <div class="chat-avatar ${type}">${avatar}</div>
-      <div class="chat-bubble ${type}">${text}</div>
-    `;
-    
-    chatMessages.appendChild(messageDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }
-}
-
-// Show user response buttons
-function showUserButtons() {
-  const inputArea = document.getElementById('chatInputArea');
-  inputArea.style.display = 'block';
-  
-  inputArea.innerHTML = `
-    <div class="chat-buttons">
-      <button class="chat-btn primary" id="letMeGoBtn">Let me go</button>
-      <button class="chat-btn secondary" id="skipBtn">OK, I will skip</button>
-    </div>
-  `;
-  
-  // Add event listeners
-  document.getElementById('letMeGoBtn').addEventListener('click', handleLetMeGo);
-  document.getElementById('skipBtn').addEventListener('click', handleSkip);
-}
-
-// Handle "Let me go" button
-function handleLetMeGo() {
-  // Add user message
-  addChatMessage('Let me go', 'user', '👤');
-  
-  // Hide input area temporarily
-  document.getElementById('chatInputArea').style.display = 'none';
-  
-  // Generate angry response after a delay
-  setTimeout(() => {
-    const angryComment = getRandomItem(interventionContent.angryComments);
-    
-    // Pick a random angryAsk object
-    const angryAskObj = getRandomItem(interventionContent.angryAsks);
-    const angryVerb = angryAskObj.verb;
-    const angryAsk = getRandomItem(angryAskObj.asks);
-    
-    // Store the required text for validation
-    currentRequiredText = angryAsk;
-    
-    const fullResponse = `${angryComment} ${angryVerb}: "${angryAsk}"`;
-    addChatMessage(fullResponse, 'persona', interventionContent.avatar, true);
-    
-    // Show text input after another delay
-    setTimeout(() => {
-      showTextInput(angryAsk);
-    }, 1000);
-  }, 1500);
-}
-
-// Handle "OK, I will skip" button  
-function handleSkip() {
-  // Add user message
-  addChatMessage('OK, I will skip', 'user', '👤');
-  
-  // Hide chat input area
-  document.getElementById('chatInputArea').style.display = 'none';
-  
-  // Show success message from persona
-  setTimeout(() => {
-    const happyComment = getRandomItem(interventionContent.happyComments);
-    addChatMessage(happyComment, 'persona', interventionContent.avatar, true);
-    
-    // Update log to "Blocked" and close tab after celebrating the good choice
-    setTimeout(() => {
-      addChatMessage('This tab will close now. Go focus on what matters! 💪', 'persona', interventionContent.avatar, true);
-      
-      setTimeout(() => {
-        chrome.runtime.sendMessage({
-          action: 'blockAccess',
-          tabId: tabId,
-          logId: logId
-        });
-      }, 1500);
-    }, 1500);
-  }, 1000);
-}
-
-// Show text input for validation
-function showTextInput(requiredText) {
-  const inputArea = document.getElementById('chatInputArea');
-  inputArea.style.display = 'block';
-  
-  inputArea.innerHTML = `
-    <div class="chat-instruction">
-      Type exactly: "<strong>${requiredText}</strong>"
-    </div>
-    <div class="chat-text-input">
-      <input type="text" id="validationInput" placeholder="Type the exact text above..." autocomplete="off">
-      <div class="chat-error-message" id="errorMessage" style="display: none;"></div>
-    </div>
-    <div class="chat-buttons" style="margin-top: 15px;">
-      <button class="chat-btn primary" id="submitBtn">Submit</button>
-    </div>
-  `;
-  
-  // Focus on input
-  document.getElementById('validationInput').focus();
-  
-  // Add event listeners
-  document.getElementById('submitBtn').addEventListener('click', validateText);
-  
-  // Handle Enter key
-  document.getElementById('validationInput').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      validateText();
-    }
+      resolve();
+    });
   });
 }
 
-// Validate typed text
-function validateText() {
-  const input = document.getElementById('validationInput');
-  const errorMessage = document.getElementById('errorMessage');
-  const typedText = input.value;
+// Calculate and display time spent today
+async function displayTimeSpent() {
+  const minutes = await calculateTodayTimeSpent();
+  const message = getTimeMessage(minutes);
   
-  if (typedText === currentRequiredText) {
-    // Correct! Add user message and proceed
-    addChatMessage(typedText, 'user', '👤');
-    
-    // Hide input area
-    document.getElementById('chatInputArea').style.display = 'none';
-    
-    // Show final persona message and then duration modal
-    setTimeout(() => {
-      addChatMessage('Fine... You can go. But remember this choice.', 'persona', interventionContent.avatar, true);
-      
-      // Show duration modal after final message
-      setTimeout(() => {
-        document.getElementById('durationModal').classList.add('show');
-      }, 2000);
-    }, 1000);
-    
+  document.getElementById('timeMessage').textContent = message;
+  console.log(`⏰ Time spent today: ${minutes} minutes - Message: "${message}"`);
+  
+  // Display slogan based on time spent
+  displayTimedSlogan(minutes);
+}
+
+// Display random slogan based on user interests and time spent
+function displayTimedSlogan(minutesSpent) {
+  if (!slogansData || userInterests.length === 0) {
+    document.getElementById('sloganText').textContent = "Take a moment to consider your priorities.";
+    return;
+  }
+  
+  // Determine time category based on minutes spent
+  const timeCategory = getTimeCategory(minutesSpent);
+  
+  // Select random interest from user's interests
+  const randomInterest = userInterests[Math.floor(Math.random() * userInterests.length)];
+  
+  // Get slogans for that interest and time category
+  const interestData = slogansData[randomInterest] || slogansData.others;
+  const timeCategorySlogans = interestData[timeCategory] || interestData.short;
+  
+  // Select random slogan
+  const randomSlogan = timeCategorySlogans[Math.floor(Math.random() * timeCategorySlogans.length)];
+  
+  document.getElementById('sloganText').textContent = randomSlogan;
+  console.log(`💡 Time category: ${timeCategory}, Interest: "${randomInterest}", Slogan: "${randomSlogan}"`);
+}
+
+// Get time category based on minutes spent
+function getTimeCategory(minutes) {
+  if (minutes <= 15) {
+    return 'short';  // 0-15 minutes
+  } else if (minutes <= 60) {
+    return 'medium'; // 16-60 minutes
   } else {
-    // Incorrect - show error
-    input.parentElement.classList.add('error');
-    errorMessage.style.display = 'block';
-    errorMessage.textContent = 'Not quite right. Type it exactly as shown above.';
-    
-    // Clear error after user starts typing again
-    input.addEventListener('input', function() {
-      input.parentElement.classList.remove('error');
-      errorMessage.style.display = 'none';
-    }, { once: true });
+    return 'long';   // 60+ minutes
   }
 }
 
-// Initialize chat conversation
-async function initializeChat() {
-  const rawContent = await loadInterventionContent();
+// Set up event listeners for buttons
+function setupEventListeners() {
+  // Allow Access button
+  document.getElementById('allowBtn').addEventListener('click', function() {
+    console.log('🟢 User clicked Allow Access');
+    showDurationModal();
+  });
   
-  if (!rawContent || !rawContent.personas || rawContent.personas.length === 0) {
-    console.error('❌ Could not load intervention content, falling back to simple mode');
-    return false;
-  }
+  // Close Tab button
+  document.getElementById('blockBtn').addEventListener('click', function() {
+    console.log('🔴 User clicked Close Tab');
+    blockAccess();
+  });
   
-  // Use the first persona from the array
-  interventionContent = rawContent.personas[0];
-  
-  // Add avatar if not present
-  if (!interventionContent.avatar) {
-    interventionContent.avatar = '👤'; // Default avatar
-  }
-  
-  console.log('✅ Loaded persona:', interventionContent.name);
-  
-  // Start conversation with random first comment
-  setTimeout(() => {
-    const firstComment = getRandomItem(interventionContent.firstComments);
-    addChatMessage(firstComment, 'persona', interventionContent.avatar, true);
-    
-    // Show user response buttons after persona speaks
-    setTimeout(() => {
-      showUserButtons();
-    }, 1500);
-  }, 500);
-  
-  return true;
+  // Duration modal buttons
+  const durationButtons = document.querySelectorAll('.duration-btn');
+  durationButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const minutes = parseInt(this.getAttribute('data-minutes'));
+      console.log(`🟢 User selected ${minutes} minutes duration`);
+      allowAccess(minutes);
+    });
+  });
 }
 
-function displayDebugInfo() {
-  const currentDomain = new URL(blockedUrl).hostname.replace('www.', '').replace('m.', '');
-  const currentTime = new Date().toLocaleString();
+// Show duration selection modal
+function showDurationModal() {
+  const modal = document.getElementById('durationModal');
+  modal.style.display = 'flex';
+}
+
+// Hide duration modal
+function hideDurationModal() {
+  const modal = document.getElementById('durationModal');
+  modal.style.display = 'none';
+}
+
+// Allow access for specified duration
+function allowAccess(minutes) {
+  const url = new URL(blockedUrl);
+  const domain = url.hostname.replace('www.', '').replace('m.', '');
   
-  // Get whitelist status
-  chrome.runtime.sendMessage({action: 'getWhitelistStatus'}, (response) => {
-    let debugText = `Current Time: ${currentTime}\n`;
-    debugText += `Blocked URL: ${blockedUrl}\n`;
-    debugText += `Raw Domain: ${new URL(blockedUrl).hostname}\n`;
-    debugText += `Processed Domain: ${currentDomain}\n\n`;
-    
-    if (response && response.whitelist && response.whitelist.length > 0) {
-      debugText += `Current Whitelist:\n`;
-      response.whitelist.forEach(w => {
-        const timeLeft = Math.max(0, Math.ceil((w.expireTime - Date.now()) / 60000));
-        const status = w.expired ? 'EXPIRED' : `${timeLeft} min left`;
-        debugText += `  • ${w.domain} - ${status}\n`;
+  console.log(`🟢 INTERCEPT: Allowing access to ${domain} for ${minutes} minutes`);
+  
+  chrome.runtime.sendMessage({
+    action: 'setTemporaryWhitelist',
+    domain: domain,
+    minutes: minutes,
+    logId: logId
+  }, () => {
+    console.log(`🟢 INTERCEPT: Redirecting to original URL`);
+    window.location.href = blockedUrl;
+  });
+}
+
+// Block access and close tab
+function blockAccess() {
+  console.log(`🔴 INTERCEPT: User chose to block access`);
+  
+  chrome.runtime.sendMessage({
+    action: 'blockAccess',
+    tabId: tabId,
+    logId: logId
+  });
+}
+
+// Time calculation utilities (inline versions of timeCalculator.js functions)
+function calculateTodayTimeSpent() {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['accessLogs'], (result) => {
+      const logs = result.accessLogs || [];
+      
+      // Get start of today (12 AM local time)
+      const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const todayStartTime = todayStart.getTime();
+      
+      // Filter logs for today and sum up allowed durations
+      let totalMinutes = 0;
+      
+      logs.forEach(log => {
+        const logTime = new Date(log.timestamp).getTime();
+        
+        // Only count logs from today that were allowed with a duration
+        if (logTime >= todayStartTime && log.action === 'Allowed' && log.duration) {
+          totalMinutes += log.duration;
+        }
       });
       
-      const matchingEntry = response.whitelist.find(w => w.domain === currentDomain);
-      if (matchingEntry) {
-        const timeLeft = Math.ceil((matchingEntry.expireTime - Date.now()) / 60000);
-        if (timeLeft > 0) {
-          debugText += `\n🚨 PROBLEM: ${currentDomain} IS whitelisted for ${timeLeft} more minutes!\n`;
-          debugText += `This shouldn't be blocked!`;
-          
-          // Show alert
-          document.getElementById('debugInfo').innerHTML += `
-            <div class="debug-alert">
-              🚨 WHITELIST BUG DETECTED! 
-              Domain ${currentDomain} is whitelisted for ${timeLeft} more minutes but was still blocked!
-            </div>
-          `;
-        } else {
-          debugText += `\n✅ Whitelist expired, blocking is correct.`;
-        }
-      } else {
-        debugText += `\n✅ No whitelist entry for ${currentDomain}, blocking is correct.`;
-      }
-    } else {
-      debugText += `No active whitelists found.\n`;
-      debugText += `✅ Blocking is correct.`;
-    }
-    
-    document.getElementById('debugInfo').textContent = debugText;
+      resolve(totalMinutes);
+    });
   });
+}
+
+function getTimeMessage(minutes) {
+  if (minutes === 0) {
+    return "Let's keep today productive!";
+  }
   
-  // Get the detailed blocking trace using logId
-  chrome.runtime.sendMessage({action: 'getDebugTrace', logId: logId}, (response) => {
-    if (response && response.trace) {
-      document.getElementById('blockingTrace').textContent = response.trace;
+  if (minutes < 60) {
+    return `You've spent nearly ${minutes} minute${minutes !== 1 ? 's' : ''} on blocked websites today`;
+  }
+  
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  
+  if (remainingMinutes === 0) {
+    return `You've almost spent ${hours} hour${hours !== 1 ? 's' : ''} on distracting websites today`;
+  }
+  
+  return `You've almost spent ${hours} hour${hours !== 1 ? 's' : ''} ${remainingMinutes} minute${remainingMinutes !== 1 ? 's' : ''} on distracting websites today`;
+}
+
+// Debug functionality
+function setupDebugMode() {
+  const debugToggle = document.getElementById('debugToggle');
+  const debugContainer = document.getElementById('debugContainer');
+  
+  debugToggle.addEventListener('click', function() {
+    if (debugContainer.style.display === 'none') {
+      debugContainer.style.display = 'block';
+      debugToggle.textContent = '🔧 Hide Debug Info';
+      loadDebugInfo();
     } else {
-      document.getElementById('blockingTrace').textContent = 'No debug trace available for logId: ' + logId;
+      debugContainer.style.display = 'none';
+      debugToggle.textContent = '🔧 Show Debug Info';
     }
   });
 }
 
-function displayLogs() {
+function loadDebugInfo() {
+  const debugInfo = document.getElementById('debugInfo');
+  const blockingTrace = document.getElementById('blockingTrace');
+  const logsDisplay = document.getElementById('logsDisplay');
+  
+  // Basic debug info
+  debugInfo.textContent = `
+Tab ID: ${tabId}
+Log ID: ${logId}
+Blocked URL: ${blockedUrl}
+User Interests: ${userInterests.join(', ')}
+Slogans Loaded: ${slogansData ? 'Yes' : 'No'}
+Timestamp: ${new Date().toLocaleString()}
+  `.trim();
+  
+  // Get blocking decision trace
+  chrome.runtime.sendMessage({
+    action: 'getDebugTrace',
+    logId: logId
+  }, (response) => {
+    if (response && response.trace) {
+      blockingTrace.textContent = response.trace;
+    } else {
+      blockingTrace.textContent = 'No blocking trace available';
+    }
+  });
+  
+  // Load recent logs
   chrome.storage.local.get(['accessLogs'], (result) => {
     const logs = result.accessLogs || [];
-    const logsDisplay = document.getElementById('logsDisplay');
+    const recentLogs = logs.slice(-5).reverse();
     
-    // Add current whitelist status
-    chrome.runtime.sendMessage({action: 'getWhitelistStatus'}, (response) => {
-      const currentDomain = new URL(blockedUrl).hostname.replace('www.', '').replace('m.', '');
-      let whitelistInfo = '';
-      
-      if (response && response.whitelist) {
-        const whitelist = response.whitelist;
-        const whitelistEntry = whitelist.find(w => w.domain === currentDomain);
-        if (whitelistEntry) {
-          const timeLeft = Math.ceil((whitelistEntry.expireTime - Date.now()) / 60000);
-          whitelistInfo = `<div class="whitelist-status">
-            <strong>⏰ Whitelist Status:</strong> ${currentDomain} whitelisted for ${timeLeft} more minutes
-          </div>`;
-        } else {
-          whitelistInfo = `<div class="whitelist-status">
-            <strong>⏰ Whitelist Status:</strong> ${currentDomain} not currently whitelisted
-          </div>`;
-        }
+    let logText = '';
+    recentLogs.forEach((log, index) => {
+      const date = new Date(log.timestamp).toLocaleString();
+      logText += `${index + 1}. ${date}\n`;
+      logText += `   URL: ${log.url}\n`;
+      logText += `   Action: ${log.action}`;
+      if (log.duration) {
+        logText += ` (${log.duration} min)`;
       }
-      
-      if (logs.length === 0) {
-        logsDisplay.innerHTML = whitelistInfo + '<p>No logs found</p>';
-        return;
-      }
-      
-      // Show last 10 logs, most recent first
-      const recentLogs = logs.slice(-10).reverse();
-      const logHtml = recentLogs.map(log => {
-        const time = new Date(log.timestamp).toLocaleString();
-        const domain = new URL(log.url).hostname;
-        return `<div class="log-entry">
-          <span class="log-time">${time}</span>
-          <span class="log-domain">${domain}</span>
-          <span class="log-action ${log.action.toLowerCase()}">${log.action}</span>
-        </div>`;
-      }).join('');
-      
-      logsDisplay.innerHTML = whitelistInfo + logHtml;
+      logText += `\n\n`;
     });
+    
+    logsDisplay.textContent = logText || 'No logs available';
   });
 }
-
-
-
-// Debug toggle functionality
-document.getElementById('debugToggle').addEventListener('click', () => {
-  const debugContainer = document.getElementById('debugContainer');
-  const toggleBtn = document.getElementById('debugToggle');
-  
-  if (debugContainer.style.display === 'none') {
-    // Show debug info
-    debugContainer.style.display = 'block';
-    toggleBtn.textContent = '🔧 Hide Debug Info';
-    toggleBtn.classList.add('active');
-    
-    // Load debug info when first shown
-    displayDebugInfo();
-    displayLogs();
-  } else {
-    // Hide debug info
-    debugContainer.style.display = 'none';
-    toggleBtn.textContent = '🔧 Show Debug Info';
-    toggleBtn.classList.remove('active');
-  }
-});
-
-// Initialize chat conversation when page loads
-initializeChat();
-
-console.log(`🔵 INTERCEPT: Page loaded for ${blockedUrl}, tabId: ${tabId}, logId: ${logId}`);
-
-// Handle duration selection (for modal)
-document.querySelectorAll('.duration-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const minutes = parseInt(btn.dataset.minutes);
-    const domain = new URL(blockedUrl).hostname.replace('www.', '').replace('m.', '');
-    const expireTime = new Date(Date.now() + minutes * 60 * 1000);
-    
-    console.log(`🟢 INTERCEPT: User selected ${minutes} minutes duration for domain ${domain}`);
-    console.log(`🟢 INTERCEPT: Whitelist should expire at: ${expireTime.toLocaleString()}`);
-    console.log(`🟢 INTERCEPT: Current time: ${new Date().toLocaleString()}`);
-    console.log(`🟢 INTERCEPT: Raw domain from URL: '${new URL(blockedUrl).hostname}'`);
-    console.log(`🟢 INTERCEPT: Processed domain: '${domain}'`);
-    console.log(`🟢 INTERCEPT: Original URL: ${blockedUrl}`);
-    
-    // Set temporary whitelist
-    console.log(`🟢 INTERCEPT: Sending setTemporaryWhitelist message`);
-    chrome.runtime.sendMessage({
-      action: 'setTemporaryWhitelist',
-      domain: domain,
-      minutes: minutes,
-      logId: logId
-    }, () => {
-      // After whitelist is set, redirect current tab
-      console.log(`🟢 INTERCEPT: Redirecting to original URL`);
-      window.location.href = blockedUrl;
-    });
-  });
-});
-

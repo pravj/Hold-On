@@ -9,7 +9,62 @@
 <body>
   <div class="container">
     <h2>🛑 Hold On Settings</h2>
-    <p class="subtitle">Manage your blocked websites</p>
+    <p class="subtitle">Manage your interests and view activity</p>
+    
+    <div class="section">
+      <h3>Your Focus Interests:</h3>
+      <p class="section-description">Select up to 3 activities you'd like to focus on when distracted</p>
+      
+      <div class="interests-grid" id="interestsGrid">
+        <button class="interest-btn" data-interest="reading">
+          <span class="interest-icon">📚</span>
+          <span class="interest-label">Reading</span>
+        </button>
+        
+        <button class="interest-btn" data-interest="cooking">
+          <span class="interest-icon">🍳</span>
+          <span class="interest-label">Cooking</span>
+        </button>
+        
+        <button class="interest-btn" data-interest="music">
+          <span class="interest-icon">🎵</span>
+          <span class="interest-label">Music</span>
+        </button>
+        
+        <button class="interest-btn" data-interest="sports">
+          <span class="interest-icon">⚽</span>
+          <span class="interest-label">Sports</span>
+        </button>
+        
+        <button class="interest-btn" data-interest="fitness">
+          <span class="interest-icon">💪</span>
+          <span class="interest-label">Fitness</span>
+        </button>
+        
+        <button class="interest-btn" data-interest="travel">
+          <span class="interest-icon">✈️</span>
+          <span class="interest-label">Travel</span>
+        </button>
+        
+        <button class="interest-btn" data-interest="outdoors">
+          <span class="interest-icon">🏔️</span>
+          <span class="interest-label">Outdoors</span>
+        </button>
+        
+        <button class="interest-btn" data-interest="others">
+          <span class="interest-icon">🎯</span>
+          <span class="interest-label">Others</span>
+        </button>
+      </div>
+      
+      <div class="selection-info">
+        <p class="selection-count">Selected: <span id="selectedCount">0</span>/3</p>
+      </div>
+      
+      <div class="actions">
+        <button id="saveInterests" class="btn-primary">Save Changes</button>
+      </div>
+    </div>
     
     <div class="section">
       <h3>Currently Blocked Sites:</h3>
@@ -19,16 +74,14 @@
         <li>instagram.com</li>
         <li>youtube.com</li>
         <li>reddit.com</li>
+        <li>x.com</li>
+        <li>linkedin.com</li>
       </ul>
     </div>
     
     <div class="section">
       <h3>View Access Log:</h3>
       <button id="viewLogsBtn" class="btn">View Logs</button>
-    </div>
-    
-    <div class="footer">
-      <p>Phase 2 will add site management</p>
     </div>
   </div>
   

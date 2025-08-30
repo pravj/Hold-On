@@ -9,18 +9,115 @@
 <body>
   <div class="container">
     <div class="content">
-      <h1>🛑 Hold On</h1>
-      <p class="message">You're about to visit a blocked site:</p>
-      <p class="url" id="blockedUrl"></p>
-      <!-- Chat Conversation Interface -->
-      <div class="chat-container">
-        <div class="chat-messages" id="chatMessages">
-          <!-- Messages will be added dynamically -->
+      <!-- Intervention Modal -->
+      <div class="intervention-modal">
+        <!-- Left Column -->
+        <div class="left-column">
+          <div class="time-info">
+            <h1 class="time-headline" id="timeMessage">Loading...</h1>
+            <p class="time-subtext">Time for a mindful pause</p>
+          </div>
+          
+          <div class="slogan-badge">
+            <p class="slogan-text" id="sloganText">Loading inspirational message...</p>
+          </div>
+          
+          <div class="blocked-site-info">
+            <p class="site-label">You're trying to visit:</p>
+            <div class="site-url-container">
+              <p class="site-url" id="blockedUrl"></p>
+            </div>
+          </div>
+          
+          <div class="action-buttons">
+            <button id="allowBtn" class="btn btn-allow">
+              <span class="btn-icon">✅</span>
+              <span class="btn-text">Let me in (just this once)</span>
+            </button>
+            <button id="blockBtn" class="btn btn-block">
+              <span class="btn-icon">❌</span>
+              <span class="btn-text">Close it, I'm done</span>
+            </button>
+          </div>
         </div>
         
-        <!-- User response area (initially hidden until persona speaks) -->
-        <div class="chat-input-area" id="chatInputArea" style="display: none;">
-          <!-- Will be populated dynamically based on conversation state -->
+        <!-- Vertical Divider -->
+        <div class="divider"></div>
+        
+        <!-- Right Column -->
+        <div class="right-column">
+          <div class="focus-status">
+            <h2 class="status-title">Focus Status</h2>
+            
+            <div class="status-trails">
+              <div class="status-trail">
+                <div class="status-label">Last 24 Hours</div>
+                <div class="status-blocks">
+                  <div class="status-block green"></div>
+                  <div class="status-block green"></div>
+                  <div class="status-block yellow"></div>
+                  <div class="status-block red"></div>
+                  <div class="status-block green"></div>
+                  <div class="status-block green"></div>
+                </div>
+                <div class="status-percentage">83%</div>
+              </div>
+              
+              <div class="status-trail">
+                <div class="status-label">This Week</div>
+                <div class="status-blocks">
+                  <div class="status-block green"></div>
+                  <div class="status-block green"></div>
+                  <div class="status-block green"></div>
+                  <div class="status-block yellow"></div>
+                  <div class="status-block yellow"></div>
+                  <div class="status-block red"></div>
+                </div>
+                <div class="status-percentage">71%</div>
+              </div>
+              
+              <div class="status-trail">
+                <div class="status-label">This Month</div>
+                <div class="status-blocks">
+                  <div class="status-block green"></div>
+                  <div class="status-block green"></div>
+                  <div class="status-block yellow"></div>
+                  <div class="status-block yellow"></div>
+                  <div class="status-block yellow"></div>
+                  <div class="status-block red"></div>
+                </div>
+                <div class="status-percentage">65%</div>
+              </div>
+              
+              <div class="status-trail">
+                <div class="status-label">This Year</div>
+                <div class="status-blocks">
+                  <div class="status-block green"></div>
+                  <div class="status-block yellow"></div>
+                  <div class="status-block yellow"></div>
+                  <div class="status-block yellow"></div>
+                  <div class="status-block red"></div>
+                  <div class="status-block red"></div>
+                </div>
+                <div class="status-percentage">58%</div>
+              </div>
+            </div>
+            
+            <div class="status-legend">
+              <div class="legend-item">
+                <div class="legend-dot green"></div>
+                <span>Focused</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot yellow"></div>
+                <span>Moderate</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot red"></div>
+                <span>Distracted</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       

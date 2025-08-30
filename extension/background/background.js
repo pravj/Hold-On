@@ -1,5 +1,15 @@
 console.log('🚀 Hold On background script loaded at:', new Date().toLocaleString());
 
+// Handle extension installation - trigger onboarding
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'install') {
+    console.log('🆕 Extension installed - triggering onboarding');
+    chrome.tabs.create({
+      url: chrome.runtime.getURL('onboarding/onboarding.html')
+    });
+  }
+});
+
 const BLOCKED_DOMAINS = [
   'facebook.com',
   'twitter.com',
@@ -221,13 +231,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       });
     });
     
-    // Update log entry to Allowed
+    // Update log entry to Allowed with duration
     if (message.logId) {
       chrome.storage.local.get(['accessLogs'], (result) => {
         const logs = result.accessLogs || [];
         const logIndex = logs.findIndex(log => log.id === message.logId);
         if (logIndex !== -1) {
           logs[logIndex].action = 'Allowed';
+          logs[logIndex].duration = message.minutes; // Store duration in minutes
           chrome.storage.local.set({ accessLogs: logs });
         }
       });

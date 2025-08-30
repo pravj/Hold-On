@@ -1,0 +1,245 @@
+{
+  "reading": {
+    "short": [
+      "You had time for a page; your bookmark didn't move.",
+      "A poem fits in this gap; you left it blank.",
+      "You could've learned a new word; your vocabulary stayed idle.",
+      "You could've nudged the bookmark forward; it's still stuck on yesterday.",
+      "You had time to finish a page; you finished an excuse."
+    ],
+    "medium": [
+      "You could've finished a chapter; your bookmark stayed parked.",
+      "Twenty pages fit in that window; your pages stayed untouched.",
+      "You could've met a new character; you left them waiting in the margins.",
+      "One chapter's worth of highlights was possible; your highlighter napped.",
+      "You could've pushed your reading streak; you broke it.",
+      "You could've turned thirty pages; you turned away."
+    ],
+    "long": [
+      "You could've closed three chapters; your bookmark didn't budge.",
+      "A short story fits in that hour; the only plot twist was you bailing.",
+      "You had time to meet a new author; you stood them up.",
+      "That was novella territory; you stayed in the blurb.",
+      "You could've finished an entire act; you acted unread.",
+      "Enough time to end a book's arc; you looped in circles.",
+      "You could've added a book to your year; you added nothing to your day.",
+      "That's a full sit-down session; you sat out your own story."
+    ]
+  },
+  "cooking": {
+    "short": [
+      "You could've diced an onion; your knife stayed clean and so did your progress.",
+      "You could've toasted spices; your ambition stayed raw.",
+      "A quick vinaigrette was doable; you dressed nothing.",
+      "You had time to boil an egg; you hard-boiled an excuse.",
+      "You could've prepped tomorrow's oats; you chose tomorrow's regret.",
+      "One sheet of roasted nuts? Easy. You roasted the clock instead.",
+      "You could've chopped a veg box; your board logged zero miles."
+    ],
+    "medium": [
+      "You could've cooked a weeknight curry; your pan stayed cold.",
+      "You could've marinated tomorrow's dinner; you marinated in indecision.",
+      "A pot of soup could be simmering; you let the minutes evaporate.",
+      "You could've kneaded dough for flatbreads; your effort didn't rise.",
+      "A quick veggie stock fits in that window; you extracted zero flavor.",
+      "Two lunch boxes prepped and stacked; you prepped excuses.",
+      "You could've mastered one sauce; you reduced your standards instead.",
+      "Brownies could be baking by now; you didn't lift a whisk.",
+      "You could've pickled a jar for the week; you preserved nothing."
+    ],
+    "long": [
+      "You could've slow-braised a showstopper and tomorrow's lunch; you braised nothing.",
+      "You could've batch-cooked four dinners; you served zero progress.",
+      "An all-day stock could be jarred and cooling; you bottled nothing.",
+      "You could've laminated pastry; you layered excuses.",
+      "That's a full feast's prep, cook, and plate; you plated nothing.",
+      "You could've started a ferment that pays for weeks; you preserved nothing.",
+      "Low-and-slow could've turned tough to tender; you never turned on the heat.",
+      "You could've cooked a complex recipe end-to-end; you ended nothing.",
+      "That was \"meal-prep the week\" time; the only thing prepped was an excuse."
+    ]
+  },
+  "fitness": {
+    "short": [
+      "You could've smashed a 7-minute workout; you exercised nothing.",
+      "A 60-second plank fits here; you held onto inertia instead.",
+      "You could've stretched hamstrings; you stretched the delay.",
+      "You could've done 10 burpees; you buried the idea.",
+      "You could've foam-rolled tight spots; you rolled with excuses.",
+      "A mobility circuit would loosen you up; you kept stiffness on lock.",
+      "You could've logged a quick warm-up; you cooled your momentum."
+    ],
+    "medium": [
+      "You could've crushed a proper HIIT session; you paused progress.",
+      "A jog fits in that window; your laces stayed tied.",
+      "You could've finished a push–pull lift; you pushed it off and pulled nothing.",
+      "A yoga flow could've untied your back; you chose knots.",
+      "You could've biked some kilometers; the only cycle was procrastination.",
+      "You could've trained legs and earned the wobble; you stood still.",
+      "Twelve rounds of intervals were waiting; you kept one pace: zero.",
+      "You could've climbed 20 flights; you elevated nothing.",
+      "You could've logged a solid session; you logged out on yourself."
+    ],
+    "long": [
+      "You could've finished a full workout—warm-up to cooldown; you cooled nothing.",
+      "Long-run miles fit in that block; your shoes never hit the road.",
+      "You could've crushed a full yoga class; your spot stayed empty.",
+      "You could've hiked a full loop; you never left the trailhead.",
+      "You could have covered legs day and core; both got the day off.",
+      "Recovery ride + mobility could've reset you; you took recovery without the work.",
+      "You could've moved the needle on fitness; you didn't move at all."
+    ]
+  },
+  "sports": {
+    "short": [
+      "You could've knocked out three sprints and a stretch; you sprinted nowhere.",
+      "Ten free throws fit in this window; you never took a shot.",
+      "You had time for a warm-up lap; you warmed the delay instead.",
+      "You could've practiced serves for ten minutes; your follow-through was avoidance.",
+      "A short shadow-boxing round fit here; your guard dropped completely.",
+      "You could've logged a micro-session; you micro-managed procrastination."
+    ],
+    "medium": [
+      "You could've gone for a run; your shoes stayed pristine.",
+      "You could've finished a pickup game; your team was one short—you.",
+      "You could've worked on defense and conditioning; you defended your delay.",
+      "A solid cardio + cooldown was possible; you cooled without earning it.",
+      "You could've practiced set pieces; you set nothing in motion.",
+      "A focused skills session fits in that slot; you focused on not starting."
+    ],
+    "long": [
+      "That's a full match you didn't play.",
+      "You could've finished a long run; the route finished without you.",
+      "An hour covers train + compete + cooldown; you did none of the above.",
+      "You could've cycled a full loop; you spun your wheels metaphorically.",
+      "That was tournament-practice time; you forfeited by choice.",
+      "You could've hit game pace and sustained it; you sustained avoidance.",
+      "That's season-prep territory; you prepped nothing.",
+      "You could've moved the scoreboard; you moved nothing at all."
+    ]
+  },
+  "music": {
+    "short": [
+      "You could've tuned up and run one scale; you stayed out of tune.",
+      "You could've clapped a tricky rhythm; you kept time for nothing.",
+      "One chord shape could be smoother; you smoothed nothing.",
+      "A quick ear-training drill was doable; you trained avoidance.",
+      "You could've recorded a hook idea; you left the track blank.",
+      "You could've cleaned strings and tightened a lick; grime won, practice lost.",
+      "You could've finished one song; you left the chorus unheard.",
+      "A quick mood-reset track fit here; you kept the mood.",
+      "You could've sampled a new artist; you sampled nothing.",
+      "Two back-to-back tracks were possible; you backed out.",
+      "You could've queued a quick mix; your queue stayed empty.",
+      "One headphone lap around the room; your headphones stayed idle.",
+      "You could've replayed a classic; nostalgia waited alone."
+    ],
+    "medium": [
+      "You could've finished an album side; the needle never dropped.",
+      "A commute-length playlist fit here; your playlist stayed blank.",
+      "You could've discovered three new artists; you discovered nothing.",
+      "You could've caught this week's new releases; they passed without you.",
+      "A focused listening session was possible; you tuned out.",
+      "You could've built a 10-track playlist; you built excuses.",
+      "You could've learned the lyrics; you stayed on mumble mode.",
+      "You could've learned a full song; you learned nothing.",
+      "You could've laid down a rough demo; your timeline stayed mute.",
+      "A verse and chorus fit here; the page stayed empty.",
+      "You could've tightened a tough passage to tempo; you timed out instead.",
+      "A solid ear-training session was possible; you ignored the notes.",
+      "Drum rudiments, stick control, groove—progress; you stuck with inertia.",
+      "You could've mixed a rough bounce; your levels stayed at zero.",
+      "One new scale/mode was waiting; you stayed in one key: procrastination."
+    ],
+    "long": [
+      "That's rehearsal-length practice you didn't do.",
+      "You could've recorded and mixed a full track; you mixed nothing.",
+      "An hour covers warm-up, drills, and a song; you did none of it.",
+      "That's concert-length listening you didn't do.",
+      "You could've explored an artist's discography; your library stayed locked.",
+      "Two albums back-to-back fit here; you turned your back.",
+      "You could've curated a season's playlist; the season went unscored.",
+      "That was \"clean the playlist queue, find new gems\" time; you found none.",
+      "You could've sunk into ambient for an hour; you kept the static.",
+      "You could've mapped your year with albums; you added nothing to the map.",
+      "An hour covers warm-up, deep listen, and unwind; you did none of it."
+    ]
+  },
+  "travel": {
+    "short": [
+      "You could've pinned three must-see spots; your map stayed a blank globe.",
+      "You could've checked passport expiry; you chose suspense over stamps.",
+      "You could've learned \"hello\" and \"thanks\" for your next stop; you spoke fluent delay.",
+      "You could've saved the metro map offline; you stayed offline on effort.",
+      "You could've favorited a nearby cafe; your list stayed decaf."
+    ],
+    "medium": [
+      "You could've drafted a one-day itinerary; your day stayed unplanned.",
+      "You could've compared flights across three dates; you compared zero options.",
+      "You could've reserved a museum timeslot; you timed out instead.",
+      "You could've built a packing checklist; you packed procrastination.",
+      "You could've priced visa and insurance; you insured the delay.",
+      "You could've short-listed two great stays; you stayed indecisive."
+    ],
+    "long": [
+      "You could've finished the visa application; you applied only inertia.",
+      "You could've planned a week of days; you spent an hour avoiding day one.",
+      "You could've booked that scenic train; you missed the view from your couch.",
+      "You could've built a clean trip budget; you budgeted zero effort."
+    ]
+  },
+  "outdoors": {
+    "short": [
+      "You could've taken a sunlight lap; you chose indoor glare.",
+      "You could've touched a tree or some grass; you touched nothing.",
+      "You could've watered a plant; you dried out your momentum.",
+      "You could've opened the door to fresh air; you opened nothing.",
+      "You could've stood in a breeze; you stood still.",
+      "Grass underfoot was available; you kept the carpet your company.",
+      "You could've chased the last bit of sun; you shadowed your day."
+    ],
+    "medium": [
+      "You could've climbed to a viewpoint; your elevation stayed zero.",
+      "You could've walked to the cafe and back; you took no path.",
+      "You could've logged 5,000 outdoor steps; you logged none.",
+      "You could've scouted a new park; you explored nothing.",
+      "A quiet trail stretch was possible; you stayed tense inside."
+    ],
+    "long": [
+      "That's a full hike you didn't take.",
+      "You could've summited a hill; you stayed at base camp.",
+      "An out-and-back ride fit here; you went nowhere.",
+      "A half-day trek was on the table; you never left your chair.",
+      "You could've bagged a new trail; you carried old excuses.",
+      "You could've explored a reserve; you reserved your energy for avoidance.",
+      "You could've spent an hour under open sky; you closed the opportunity."
+    ]
+  },
+  "others": {
+    "short": [
+      "You could've taken one tiny step toward your goal; you stood perfectly still.",
+      "You could've nudged one task from \"someday\" to \"done\"; nothing moved.",
+      "A single line in your plan could've been written; the page stayed blank.",
+      "You could've set one reminder that helps future-you; future-you gets nothing.",
+      "A quick check-in on your goal fit here; you checked out.",
+      "You could've marked one box complete; the list just stared back."
+    ],
+    "medium": [
+      "You could've cleaned a backlog row; the backlog cleaned you out.",
+      "You could've crossed off the task you've been avoiding; you avoided progress.",
+      "You could've clarified a plan; you clarified only procrastination.",
+      "You could've made tomorrow easier; you gifted it the same digital mess."
+    ],
+    "long": [
+      "You could've hit a milestone; you hit pause.",
+      "That was launch-something time; you launched excuses.",
+      "You could've turned a \"someday\" into \"done\"; it stayed mythical.",
+      "An hour covers deep work and a breather; you did neither.",
+      "You could've built the thing and the habit; you built delay.",
+      "This block could've moved you a level up; you stayed in the lobby.",
+      "You could've closed a loop that's nagged for weeks; the loop stays open.",
+      "You could've made progress others notice; only the clock noticed.",
+      "You could've changed your week's trajectory; you curved it back to zero."
+    ]
+  }
+}

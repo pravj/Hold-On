@@ -30,7 +30,7 @@
   
   "web_accessible_resources": [
     {
-      "resources": ["assets/interventionContent.json"],
+      "resources": ["assets/interventionContent.json", "assets/slogans.json"],
       "matches": ["<all_urls>"]
     }
   ]

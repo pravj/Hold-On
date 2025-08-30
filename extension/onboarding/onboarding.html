@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Hold On</title>
+  <link rel="stylesheet" href="onboarding.css">
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <div class="header">
+        <img src="../assets/icon128.png" alt="Hold On" class="logo">
+        <h1>🛑 Welcome to Hold On</h1>
+        <p class="subtitle">Let's help you focus on what matters most</p>
+      </div>
+
+      <div class="onboarding-step">
+        <h2>Choose Your Interests</h2>
+        <p class="instruction">Select up to 3 activities you'd like to focus on instead of browsing:</p>
+        
+        <div class="interests-grid">
+          <button class="interest-btn" data-interest="reading">
+            <span class="interest-icon">📚</span>
+            <span class="interest-label">Reading</span>
+          </button>
+          
+          <button class="interest-btn" data-interest="cooking">
+            <span class="interest-icon">🍳</span>
+            <span class="interest-label">Cooking</span>
+          </button>
+          
+          <button class="interest-btn" data-interest="music">
+            <span class="interest-icon">🎵</span>
+            <span class="interest-label">Music</span>
+          </button>
+          
+          <button class="interest-btn" data-interest="sports">
+            <span class="interest-icon">⚽</span>
+            <span class="interest-label">Sports</span>
+          </button>
+          
+          <button class="interest-btn" data-interest="fitness">
+            <span class="interest-icon">💪</span>
+            <span class="interest-label">Fitness</span>
+          </button>
+          
+          <button class="interest-btn" data-interest="travel">
+            <span class="interest-icon">✈️</span>
+            <span class="interest-label">Travel</span>
+          </button>
+          
+          <button class="interest-btn" data-interest="outdoors">
+            <span class="interest-icon">🏔️</span>
+            <span class="interest-label">Outdoors</span>
+          </button>
+          
+          <button class="interest-btn" data-interest="others">
+            <span class="interest-icon">🎯</span>
+            <span class="interest-label">Others</span>
+          </button>
+        </div>
+
+        <div class="selection-info">
+          <p class="selection-count">Selected: <span id="selectedCount">0</span>/3</p>
+        </div>
+
+        <div class="actions">
+          <button id="continueBtn" class="btn-primary" disabled>Continue</button>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h3>How Hold On Works</h3>
+        <div class="info-points">
+          <div class="info-point">
+            <span class="info-icon">🚫</span>
+            <p>We'll block distracting websites</p>
+          </div>
+          <div class="info-point">
+            <span class="info-icon">⏰</span>
+            <p>Show you how much time you've spent browsing</p>
+          </div>
+          <div class="info-point">
+            <span class="info-icon">💡</span>
+            <p>Suggest better activities based on your interests</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="onboarding.js"></script>
+</body>
+</html>

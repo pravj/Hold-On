@@ -12,13 +12,8 @@ let userInterests = [];
 document.addEventListener('DOMContentLoaded', async function() {
   console.log('🚀 Intercept page loaded for:', blockedUrl);
   
-  // Set the blocked URL
-  const blockedUrlElement = document.getElementById('blockedUrl');
-  if (blockedUrlElement) {
-    blockedUrlElement.textContent = blockedUrl;
-  } else {
-    console.error('❌ blockedUrl element not found in DOM');
-  }
+  // Set the site info (favicon and clean domain)
+  setSiteInfo(blockedUrl);
   
   // Load slogans and user interests
   await loadSlogans();
@@ -32,6 +27,9 @@ document.addEventListener('DOMContentLoaded', async function() {
   
   // Set up event listeners
   setupEventListeners();
+  
+  // Start the 10-second timer for the allow button
+  startAllowButtonTimer();
   
   // Set up debug functionality
   setupDebugMode();
@@ -414,4 +412,66 @@ Timestamp: ${new Date().toLocaleString()}
     
     logsDisplay.textContent = logText || 'No logs available';
   });
+}
+
+// Start the 10-second timer for the allow button
+function startAllowButtonTimer() {
+  const allowBtn = document.getElementById('allowBtn');
+  const timerSlider = allowBtn.querySelector('.timer-slider');
+  
+  if (!allowBtn || !timerSlider) {
+    console.error('❌ Allow button or timer slider not found');
+    return;
+  }
+  
+  // Start the slider animation
+  timerSlider.classList.add('active');
+  
+  // Enable the button after 10 seconds
+  setTimeout(() => {
+    allowBtn.disabled = false;
+    allowBtn.title = 'Click to allow access';
+    console.log('🔓 Allow button enabled after 10 seconds');
+  }, 10000);
+}
+
+// Set site favicon and clean domain
+function setSiteInfo(url) {
+  const faviconElement = document.getElementById('siteFavicon');
+  const domainElement = document.getElementById('siteDomain');
+  
+  if (!faviconElement || !domainElement) {
+    console.error('❌ Site info elements not found in DOM');
+    return;
+  }
+  
+  try {
+    const urlObj = new URL(url);
+    let cleanDomain = urlObj.hostname;
+    
+    // Remove www. prefix if present
+    if (cleanDomain.startsWith('www.')) {
+      cleanDomain = cleanDomain.substring(4);
+    }
+    
+    // Set the clean domain
+    domainElement.textContent = cleanDomain;
+    
+    // Set favicon using Google's favicon service
+    const faviconUrl = `https://www.google.com/s2/favicons?domain=${cleanDomain}&sz=32`;
+    faviconElement.src = faviconUrl;
+    faviconElement.alt = `${cleanDomain} favicon`;
+    
+    // Fallback if favicon fails to load
+    faviconElement.onerror = function() {
+      this.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23475569" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>';
+      this.alt = 'Website icon';
+    };
+    
+    console.log(`🌐 Set site info: ${cleanDomain}`);
+  } catch (error) {
+    console.error('❌ Error parsing URL:', error);
+    domainElement.textContent = 'Unknown site';
+    faviconElement.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23475569" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>';
+  }
 }

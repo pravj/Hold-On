@@ -34,31 +34,33 @@
           </div>
         </div>
         
-        <!-- Section 3: Site URL Info -->
-        <div class="section-card url-section">
-          <p class="url-label">You're trying to visit:</p>
-          <div class="url-container">
-            <p class="url-text" id="blockedUrl"></p>
-          </div>
-        </div>
-        
-        <!-- Section 4: Decision Buttons -->
-        <div class="section-card buttons-section">
-          <div class="action-buttons">
-            <button id="allowBtn" class="btn btn-allow">
-              <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20,6 9,17 4,12"></polyline>
-              </svg>
-              <span class="btn-text">Let me in (just this once)</span>
-            </button>
-            <button id="blockBtn" class="btn btn-block">
-              <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="15" y1="9" x2="9" y2="15"></line>
-                <line x1="9" y1="9" x2="15" y2="15"></line>
-              </svg>
-              <span class="btn-text">Close it, I'm done</span>
-            </button>
+        <!-- Section 3: Continue Decision -->
+        <div class="section-card action-section">
+          <p class="continue-label">Do you want to continue?</p>
+          
+          <div class="decision-row">
+            <div class="site-capsule">
+              <img class="site-favicon" id="siteFavicon" src="" alt="" />
+              <span class="site-domain" id="siteDomain">Loading...</span>
+            </div>
+            
+            <div class="action-buttons">
+              <button id="allowBtn" class="btn btn-allow" disabled>
+                <div class="timer-slider"></div>
+                <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20,6 9,17 4,12"></polyline>
+                </svg>
+                <span class="btn-text">Let me in, I give up</span>
+              </button>
+              <button id="blockBtn" class="btn btn-block">
+                <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="15" y1="9" x2="9" y2="15"></line>
+                  <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+                <span class="btn-text">Close it, I understand</span>
+              </button>
+            </div>
           </div>
         </div>
         

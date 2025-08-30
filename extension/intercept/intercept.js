@@ -13,7 +13,12 @@ document.addEventListener('DOMContentLoaded', async function() {
   console.log('🚀 Intercept page loaded for:', blockedUrl);
   
   // Set the blocked URL
-  document.getElementById('blockedUrl').textContent = blockedUrl;
+  const blockedUrlElement = document.getElementById('blockedUrl');
+  if (blockedUrlElement) {
+    blockedUrlElement.textContent = blockedUrl;
+  } else {
+    console.error('❌ blockedUrl element not found in DOM');
+  }
   
   // Load slogans and user interests
   await loadSlogans();
@@ -21,6 +26,9 @@ document.addEventListener('DOMContentLoaded', async function() {
   
   // Calculate and display time spent today (this will also display the slogan)
   await displayTimeSpent();
+  
+  // Calculate and display focus metrics
+  await displayFocusMetrics();
   
   // Set up event listeners
   setupEventListeners();
@@ -68,7 +76,12 @@ async function displayTimeSpent() {
   const minutes = await calculateTodayTimeSpent();
   const message = getTimeMessage(minutes);
   
-  document.getElementById('timeMessage').textContent = message;
+  const timeMessageElement = document.getElementById('timeMessage');
+  if (timeMessageElement) {
+    timeMessageElement.textContent = message;
+  } else {
+    console.error('❌ timeMessage element not found in DOM');
+  }
   console.log(`⏰ Time spent today: ${minutes} minutes - Message: "${message}"`);
   
   // Display slogan based on time spent
@@ -77,8 +90,14 @@ async function displayTimeSpent() {
 
 // Display random slogan based on user interests and time spent
 function displayTimedSlogan(minutesSpent) {
+  const sloganElement = document.getElementById('sloganText');
+  if (!sloganElement) {
+    console.error('❌ sloganText element not found in DOM');
+    return;
+  }
+  
   if (!slogansData || userInterests.length === 0) {
-    document.getElementById('sloganText').textContent = "Take a moment to consider your priorities.";
+    sloganElement.textContent = "Take a moment to consider your priorities.";
     return;
   }
   
@@ -95,7 +114,7 @@ function displayTimedSlogan(minutesSpent) {
   // Select random slogan
   const randomSlogan = timeCategorySlogans[Math.floor(Math.random() * timeCategorySlogans.length)];
   
-  document.getElementById('sloganText').textContent = randomSlogan;
+  sloganElement.textContent = randomSlogan;
   console.log(`💡 Time category: ${timeCategory}, Interest: "${randomInterest}", Slogan: "${randomSlogan}"`);
 }
 
@@ -209,18 +228,127 @@ function getTimeMessage(minutes) {
     return "Let's keep today productive!";
   }
   
+  // Template messages for randomization
+  const messageTemplates = [
+    "You've already lost TIME to distractions today.",
+    "Roughly TIME wasted today — want to add more?",
+    "Almost TIME slipped away today. For what?",
+    "You've scrolled away around TIME today.",
+    "You have traded almost TIME today for scrolling.",
+    "Around TIME gone to nothing today.",
+    "Today's tally: TIME lost to scrolling.",
+    "Nearly TIME of today, gone for nothing.",
+    "About TIME of today — wasted on scrolling.",
+    "You've lost nearly TIME today.",
+    "Around TIME wasted away today.",
+    "You've burned almost TIME today.",
+    "TIME of focus lost today.",
+    "Nearly TIME slipped off today.",
+    "You've thrown away TIME today.",
+    "Today's loss: about TIME.",
+    "TIME traded for nothing today.",
+    "You've drained TIME today."
+  ];
+  
+  // Format time in "Xh Ym" or "Xm" format
+  const timeString = formatTimeCompact(minutes);
+  
+  // Select random template and replace TIME placeholder
+  const randomTemplate = messageTemplates[Math.floor(Math.random() * messageTemplates.length)];
+  return randomTemplate.replace('TIME', timeString);
+}
+
+// Helper function to format time in compact format (e.g., "2h 15m" or "45m")
+function formatTimeCompact(minutes) {
   if (minutes < 60) {
-    return `You've spent nearly ${minutes} minute${minutes !== 1 ? 's' : ''} on blocked websites today`;
+    return `${minutes}m`;
   }
   
   const hours = Math.floor(minutes / 60);
   const remainingMinutes = minutes % 60;
   
   if (remainingMinutes === 0) {
-    return `You've almost spent ${hours} hour${hours !== 1 ? 's' : ''} on distracting websites today`;
+    return `${hours}h`;
   }
   
-  return `You've almost spent ${hours} hour${hours !== 1 ? 's' : ''} ${remainingMinutes} minute${remainingMinutes !== 1 ? 's' : ''} on distracting websites today`;
+  return `${hours}h ${remainingMinutes}m`;
+}
+
+// Calculate and display focus metrics
+async function displayFocusMetrics() {
+  const minutes = await calculateTodayTimeSpent();
+  const wastedHours = minutes / 60;
+  
+  // Calculate focus uptime (17 waking hours - 7 sleep hours)
+  const totalWakingHours = 17;
+  const uptime = Math.max(0, ((totalWakingHours - wastedHours) / totalWakingHours) * 100);
+  
+  // Display uptime percentage
+  const uptimeValueElement = document.getElementById('focusUptimeValue');
+  if (uptimeValueElement) {
+    uptimeValueElement.textContent = `${uptime.toFixed(2)}%`;
+  } else {
+    console.error('❌ focusUptimeValue element not found in DOM');
+  }
+  
+  // Generate craving spikes bars for focus uptime visualization
+  generateCravingSpikes();
+}
+
+// Removed old uptime blocks function - now using craving bars for focus uptime
+
+// Generate craving spikes visualization
+function generateCravingSpikes() {
+  const cravingContainer = document.getElementById('cravingBars');
+  if (!cravingContainer) {
+    console.error('❌ cravingBars element not found in DOM');
+    return;
+  }
+  cravingContainer.innerHTML = '';
+  
+  // Calculate intervals (17 hours * 60 minutes / 5 minutes = 204 intervals)
+  const totalIntervals = (17 * 60) / 5; // 204 intervals
+  
+  // Generate mock data for demonstration
+  for (let i = 0; i < totalIntervals; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'craving-bar';
+    
+    // Mock logic: mostly no interruption, some resistance, fewer gave-ins
+    const rand = Math.random();
+    let status;
+    
+    if (rand < 0.92) {
+      status = 'no-interruption';
+      bar.classList.add('no-interruption');
+    } else if (rand < 0.97) {
+      status = 'resisted';
+      bar.classList.add('resisted');
+    } else {
+      status = 'gave-in';
+      bar.classList.add('gave-in');
+    }
+    
+    // Calculate time for tooltip
+    const startMinute = i * 5;
+    const startHour = Math.floor(startMinute / 60) + 7; // Start from 7 AM
+    const startMin = startMinute % 60;
+    const endMin = (startMin + 5) % 60;
+    const endHour = startMin + 5 >= 60 ? startHour + 1 : startHour;
+    
+    const formatTime = (h, m) => {
+      const period = h >= 12 ? 'PM' : 'AM';
+      const hour12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+      return `${hour12}:${m.toString().padStart(2, '0')}${period}`;
+    };
+    
+    bar.title = `${formatTime(startHour, startMin)}–${formatTime(endHour, endMin)} • ${status === 'no-interruption' ? 'No interruption' : status === 'resisted' ? 'Resisted' : 'Gave in'}`;
+    
+    // Add staggered animation delay
+    bar.style.animationDelay = `${i * 0.001}s`;
+    
+    cravingContainer.appendChild(bar);
+  }
 }
 
 // Debug functionality

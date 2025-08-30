@@ -61,18 +61,54 @@ function getTimeMessage(minutes) {
     return "Let's keep today productive!";
   }
   
+  // Template messages for randomization
+  const messageTemplates = [
+    "You've already lost TIME to distractions today.",
+    "Roughly TIME wasted today — want to add more?",
+    "Almost TIME slipped away today. For what?",
+    "You've scrolled away around TIME today.",
+    "You have traded almost TIME today for scrolling.",
+    "Around TIME gone to nothing today.",
+    "Today's tally: TIME lost to scrolling.",
+    "Nearly TIME of today, gone for nothing.",
+    "About TIME of today — wasted on scrolling.",
+    "You've lost nearly TIME today.",
+    "Around TIME wasted away today.",
+    "You've burned almost TIME today.",
+    "TIME of focus lost today.",
+    "Nearly TIME slipped off today.",
+    "You've thrown away TIME today.",
+    "Today's loss: about TIME.",
+    "TIME traded for nothing today.",
+    "You've drained TIME today."
+  ];
+  
+  // Format time in "Xh Ym" or "Xm" format
+  const timeString = formatTimeCompact(minutes);
+  
+  // Select random template and replace TIME placeholder
+  const randomTemplate = messageTemplates[Math.floor(Math.random() * messageTemplates.length)];
+  return randomTemplate.replace('TIME', timeString);
+}
+
+/**
+ * Formats time in compact format (e.g., "2h 15m" or "45m")
+ * @param {number} minutes - Total minutes to format
+ * @returns {string} Compact formatted time string
+ */
+function formatTimeCompact(minutes) {
   if (minutes < 60) {
-    return `You've spent nearly ${minutes} minute${minutes !== 1 ? 's' : ''} on blocked websites today`;
+    return `${minutes}m`;
   }
   
   const hours = Math.floor(minutes / 60);
   const remainingMinutes = minutes % 60;
   
   if (remainingMinutes === 0) {
-    return `You've almost spent ${hours} hour${hours !== 1 ? 's' : ''} on distracting websites today`;
+    return `${hours}h`;
   }
   
-  return `You've almost spent ${hours} hour${hours !== 1 ? 's' : ''} ${remainingMinutes} minute${remainingMinutes !== 1 ? 's' : ''} on distracting websites today`;
+  return `${hours}h ${remainingMinutes}m`;
 }
 
 /**

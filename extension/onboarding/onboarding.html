@@ -9,15 +9,82 @@
 <body>
   <div class="container">
     <div class="content">
-      <div class="header">
-        <img src="../assets/icon128.png" alt="Hold On" class="logo">
-        <h1>🛑 Welcome to Hold On</h1>
-        <p class="subtitle">Let's help you focus on what matters most</p>
+      
+      <!-- Progress Stepper -->
+      <div class="stepper">
+        <div class="step-item active" data-step="1">
+          <div class="step-circle">1</div>
+          <span class="step-label">Welcome</span>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-item" data-step="2">
+          <div class="step-circle">2</div>
+          <span class="step-label">Interests</span>
+        </div>
       </div>
-
-      <div class="onboarding-step">
-        <h2>Choose Your Interests</h2>
-        <p class="instruction">Select up to 3 activities you'd like to focus on instead of browsing:</p>
+      
+      <!-- Step 1: Introduction -->
+      <div class="onboarding-step step-1 active" id="step1">
+        <div class="intro-hero">
+          <img src="../assets/icon128.png" alt="Hold On" class="logo">
+          <h1 class="hero-title">Reclaim Your Focus</h1>
+          <p class="hero-subtitle">Break free from mindless scrolling and redirect your energy toward what truly matters.</p>
+        </div>
+        
+        <div class="value-props">
+          <div class="value-prop">
+            <div class="prop-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12,6 12,12 16,14"/>
+              </svg>
+            </div>
+            <div class="prop-content">
+              <h3>Mindful Pauses</h3>
+              <p>Get real-time awareness of your browsing time before you get sucked in</p>
+            </div>
+          </div>
+          
+          <div class="value-prop">
+            <div class="prop-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+            </div>
+            <div class="prop-content">
+              <h3>Personalized Redirects</h3>
+              <p>Gentle nudges toward activities that align with your goals and interests</p>
+            </div>
+          </div>
+          
+          <div class="value-prop">
+            <div class="prop-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4"/>
+                <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"/>
+                <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"/>
+                <path d="M13 12h3a2 2 0 0 1 2 2v1"/>
+                <path d="M11 12H8a2 2 0 0 0-2 2v1"/>
+              </svg>
+            </div>
+            <div class="prop-content">
+              <h3>Progress Tracking</h3>
+              <p>Visual insights into your focus patterns and daily productivity wins</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="step-actions">
+          <button id="nextToInterests" class="btn-primary">Get Started</button>
+        </div>
+      </div>
+      
+      <!-- Step 2: Interests Selection -->
+      <div class="onboarding-step step-2" id="step2">
+        <div class="step-header">
+          <h2>What energizes you?</h2>
+          <p class="step-description">Choose activities you'd rather spend time on. We'll suggest these when you're about to get distracted.</p>
+        </div>
         
         <div class="interests-grid">
           <button class="interest-btn" data-interest="reading">
@@ -55,38 +122,32 @@
             <span class="interest-label">Outdoors</span>
           </button>
           
+          <button class="interest-btn" data-interest="creativity">
+            <span class="interest-icon">🎨</span>
+            <span class="interest-label">Creativity</span>
+          </button>
+          
+          <button class="interest-btn" data-interest="learning">
+            <span class="interest-icon">🧠</span>
+            <span class="interest-label">Learning</span>
+          </button>
+          
           <button class="interest-btn" data-interest="others">
             <span class="interest-icon">🎯</span>
-            <span class="interest-label">Others</span>
+            <span class="interest-label">Other Goals</span>
           </button>
         </div>
 
         <div class="selection-info">
-          <p class="selection-count">Selected: <span id="selectedCount">0</span>/3</p>
+          <p class="selection-count">Select up to 3 • <span id="selectedCount">0</span> chosen</p>
         </div>
 
-        <div class="actions">
-          <button id="continueBtn" class="btn-primary" disabled>Continue</button>
+        <div class="step-actions">
+          <button id="backToIntro" class="btn-secondary">Back</button>
+          <button id="finishOnboarding" class="btn-primary" disabled>Complete Setup</button>
         </div>
       </div>
-
-      <div class="info-section">
-        <h3>How Hold On Works</h3>
-        <div class="info-points">
-          <div class="info-point">
-            <span class="info-icon">🚫</span>
-            <p>We'll block distracting websites</p>
-          </div>
-          <div class="info-point">
-            <span class="info-icon">⏰</span>
-            <p>Show you how much time you've spent browsing</p>
-          </div>
-          <div class="info-point">
-            <span class="info-icon">💡</span>
-            <p>Suggest better activities based on your interests</p>
-          </div>
-        </div>
-      </div>
+      
     </div>
   </div>
 

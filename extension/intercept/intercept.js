@@ -150,6 +150,9 @@ function setupEventListeners() {
       allowAccess(minutes);
     });
   });
+  
+  // Close modal when clicking outside or pressing Esc
+  setupModalCloseHandlers();
 }
 
 // Show duration selection modal
@@ -295,8 +298,8 @@ async function displayFocusMetrics() {
 
 // Removed old uptime blocks function - now using craving bars for focus uptime
 
-// Generate craving spikes visualization
-function generateCravingSpikes() {
+// Generate activity visualization based on real access logs
+async function generateCravingSpikes() {
   const cravingContainer = document.getElementById('cravingBars');
   if (!cravingContainer) {
     console.error('❌ cravingBars element not found in DOM');
@@ -304,49 +307,127 @@ function generateCravingSpikes() {
   }
   cravingContainer.innerHTML = '';
   
-  // Calculate intervals (17 hours * 60 minutes / 5 minutes = 204 intervals)
-  const totalIntervals = (17 * 60) / 5; // 204 intervals
+  // Get access logs
+  const accessLogs = await getAccessLogs();
   
-  // Generate mock data for demonstration
+  // Calculate intervals (24 hours * 60 minutes / 5 minutes = 288 intervals)
+  const totalIntervals = (24 * 60) / 5; // 288 intervals
+  
+  // Get current time and start of today
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  
+  // Process logs to create interval map with site information
+  const intervalData = new Array(totalIntervals).fill(null).map(() => ({
+    status: 'no-interruption',
+    site: null
+  }));
+  
+  accessLogs.forEach(log => {
+    const logTime = new Date(log.timestamp);
+    const logDate = new Date(logTime.getFullYear(), logTime.getMonth(), logTime.getDate());
+    
+    // Only process logs from today
+    if (logDate.getTime() === todayStart.getTime()) {
+      // Calculate which 5-minute interval this log belongs to
+      const minutesFromStart = Math.floor((logTime - todayStart) / (1000 * 60));
+      const intervalIndex = Math.floor(minutesFromStart / 5);
+      
+      if (intervalIndex >= 0 && intervalIndex < totalIntervals) {
+        // Extract clean domain from log URL
+        let cleanSite = 'unknown site';
+        try {
+          if (log.url) {
+            const urlObj = new URL(log.url);
+            cleanSite = urlObj.hostname.replace(/^www\./, '');
+          }
+        } catch (e) {
+          // Keep default 'unknown site'
+        }
+        
+        // Handle both old and new log formats for backward compatibility
+        const isResisted = log.action === 'Attempted' || log.action === 'Prevented' || log.action === 'Blocked';
+        const isAllowed = log.action === 'Allowed';
+        
+        if (isResisted) {
+          // Only mark as resisted if not already marked as gave-in
+          if (intervalData[intervalIndex].status === 'no-interruption') {
+            intervalData[intervalIndex] = {
+              status: 'resisted',
+              site: cleanSite
+            };
+          }
+        } else if (isAllowed) {
+          // Mark as gave-in (overrides resisted)
+          intervalData[intervalIndex] = {
+            status: 'gave-in',
+            site: cleanSite
+          };
+        }
+      }
+    }
+  });
+  
+  // Calculate current time interval to determine future bars
+  const currentMinutesFromStart = Math.floor((now - todayStart) / (1000 * 60));
+  const currentIntervalIndex = Math.floor(currentMinutesFromStart / 5);
+  
+  // Generate bars based on real data
   for (let i = 0; i < totalIntervals; i++) {
     const bar = document.createElement('div');
     bar.className = 'craving-bar';
     
-    // Mock logic: mostly no interruption, some resistance, fewer gave-ins
-    const rand = Math.random();
-    let status;
-    
-    if (rand < 0.92) {
-      status = 'no-interruption';
-      bar.classList.add('no-interruption');
-    } else if (rand < 0.97) {
-      status = 'resisted';
-      bar.classList.add('resisted');
+    // Determine status: future bars should be grey
+    let status, site = null;
+    if (i > currentIntervalIndex) {
+      status = 'future';
+      bar.classList.add('future');
+      // No tooltip for future bars
     } else {
-      status = 'gave-in';
-      bar.classList.add('gave-in');
+      const intervalInfo = intervalData[i];
+      status = intervalInfo.status;
+      site = intervalInfo.site;
+      bar.classList.add(status);
+      
+      // Set tooltip based on status
+      if (status === 'gave-in' && site) {
+        bar.title = `Gave in: ${site}`;
+      } else if (status === 'resisted' && site) {
+        bar.title = `Attempted to open: ${site}`;
+      } else if (status === 'no-interruption') {
+        // Calculate time for no-interruption tooltip
+        const startMinute = i * 5;
+        const startHour = Math.floor(startMinute / 60);
+        const startMin = startMinute % 60;
+        const endMin = (startMin + 5) % 60;
+        const endHour = startMin + 5 >= 60 ? startHour + 1 : startHour;
+        
+        const formatTime = (h, m) => {
+          const period = h >= 12 ? 'PM' : 'AM';
+          const hour12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+          return `${hour12}:${m.toString().padStart(2, '0')}${period}`;
+        };
+        
+        bar.title = `${formatTime(startHour, startMin)}–${formatTime(endHour, endMin)} • No interruption`;
+      }
     }
-    
-    // Calculate time for tooltip
-    const startMinute = i * 5;
-    const startHour = Math.floor(startMinute / 60) + 7; // Start from 7 AM
-    const startMin = startMinute % 60;
-    const endMin = (startMin + 5) % 60;
-    const endHour = startMin + 5 >= 60 ? startHour + 1 : startHour;
-    
-    const formatTime = (h, m) => {
-      const period = h >= 12 ? 'PM' : 'AM';
-      const hour12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
-      return `${hour12}:${m.toString().padStart(2, '0')}${period}`;
-    };
-    
-    bar.title = `${formatTime(startHour, startMin)}–${formatTime(endHour, endMin)} • ${status === 'no-interruption' ? 'No interruption' : status === 'resisted' ? 'Resisted' : 'Gave in'}`;
     
     // Add staggered animation delay
     bar.style.animationDelay = `${i * 0.001}s`;
     
     cravingContainer.appendChild(bar);
   }
+  
+  console.log(`📊 Generated ${totalIntervals} activity bars from real access logs`);
+}
+
+// Get access logs from storage
+function getAccessLogs() {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['accessLogs'], (result) => {
+      resolve(result.accessLogs || []);
+    });
+  });
 }
 
 // Debug functionality
@@ -433,6 +514,38 @@ function startAllowButtonTimer() {
     allowBtn.title = 'Click to allow access';
     console.log('🔓 Allow button enabled after 10 seconds');
   }, 10000);
+}
+
+// Set up modal close handlers
+function setupModalCloseHandlers() {
+  const modal = document.getElementById('durationModal');
+  const modalContent = document.querySelector('.modal-content');
+  
+  if (!modal || !modalContent) {
+    console.error('❌ Duration modal elements not found');
+    return;
+  }
+  
+  // Close when clicking outside the modal content
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) {
+      console.log('🚫 User clicked outside modal - closing');
+      hideDurationModal();
+    }
+  });
+  
+  // Prevent clicks inside modal content from closing the modal
+  modalContent.addEventListener('click', function(e) {
+    e.stopPropagation();
+  });
+  
+  // Close when pressing Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && modal.style.display === 'flex') {
+      console.log('🚫 User pressed Escape - closing modal');
+      hideDurationModal();
+    }
+  });
 }
 
 // Set site favicon and clean domain

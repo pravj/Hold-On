@@ -138,8 +138,7 @@ body::before {
   height: 2px;
   background: #e2e8f0;
   margin: 0 20px;
-  position: relative;
-  top: -16px;
+  align-self: center;
   transition: all 0.3s ease;
 }
 
@@ -371,6 +370,354 @@ body::before {
   font-weight: 700;
 }
 
+/* Step 3: Website Selection */
+.websites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.website-btn {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-height: 120px;
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.website-btn:hover {
+  border-color: #3b82f6;
+  background: #f8fafc;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 
+    0 8px 25px rgba(59, 130, 246, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.website-btn.selected {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  border-color: #3b82f6;
+  color: white;
+  box-shadow: 
+    0 8px 25px rgba(59, 130, 246, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.website-btn.selected:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+  transform: translateY(-3px) scale(1.02);
+}
+
+.website-icon {
+  font-size: 32px;
+  margin-bottom: 4px;
+  transition: transform 0.3s ease;
+}
+
+.website-favicon {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 4px;
+  transition: transform 0.3s ease;
+  border-radius: 4px;
+}
+
+.website-btn:hover .website-icon,
+.website-btn:hover .website-favicon {
+  transform: scale(1.1);
+}
+
+.website-btn--others {
+  border: 2px dashed #cbd5e1;
+  background: #f8fafc;
+}
+
+.website-btn--others:hover {
+  border-color: #3b82f6;
+  border-style: dashed;
+}
+
+.website-label {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: color 0.3s ease;
+  margin-bottom: 2px;
+}
+
+.website-url {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.7;
+  transition: color 0.3s ease;
+}
+
+/* Custom Website Modal */
+.custom-website-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.15),
+    0 8px 16px rgba(0, 0, 0, 0.1);
+  max-width: 480px;
+  width: 90%;
+  max-height: 90vh;
+  overflow: hidden;
+  animation: modalSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 24px 0;
+  margin-bottom: 16px;
+}
+
+.modal-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+  color: #0f172a;
+  background: #f1f5f9;
+}
+
+.modal-body {
+  padding: 0 24px 24px;
+}
+
+.modal-description {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.custom-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  margin-bottom: 16px;
+}
+
+.custom-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.website-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  animation: previewFadeIn 0.3s ease;
+}
+
+@keyframes previewFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.preview-favicon {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.preview-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.preview-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+.preview-url {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 0 24px 24px;
+}
+
+.modal-actions .btn-secondary,
+.modal-actions .btn-primary {
+  padding: 10px 20px;
+  font-size: 14px;
+}
+
+/* Step 4: Final Confirmation */
+.setup-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-bottom: 40px;
+  text-align: left;
+}
+
+.summary-section {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.summary-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+
+.summary-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.summary-tag {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+
+.test-section {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 32px;
+  text-align: left;
+}
+
+.test-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.test-description {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.test-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.test-link-btn {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+  transition: all 0.2s ease;
+}
+
+.test-link-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  background: #f8fafc;
+}
+
 /* Action Buttons */
 .step-actions {
   display: flex;
@@ -412,6 +759,7 @@ body::before {
   opacity: 0;
   transition: opacity 0.3s ease;
   border-radius: inherit;
+  z-index: 1;
 }
 
 .btn-primary:hover:not(:disabled)::before {
@@ -451,8 +799,13 @@ body::before {
     0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
-.btn-primary .btn-text,
-.btn-secondary .btn-text {
+.btn-primary,
+.btn-secondary {
+  position: relative;
+}
+
+.btn-primary *,
+.btn-secondary * {
   position: relative;
   z-index: 2;
 }
@@ -531,17 +884,44 @@ body::before {
     gap: 12px;
   }
   
+  .websites-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
   .interest-btn {
     padding: 16px 12px;
     min-height: 95px;
+  }
+  
+  .website-btn {
+    padding: 16px 12px;
+    min-height: 100px;
   }
   
   .interest-icon {
     font-size: 24px;
   }
   
+  .website-icon {
+    font-size: 24px;
+  }
+  
+  .website-favicon {
+    width: 24px;
+    height: 24px;
+  }
+  
   .interest-label {
     font-size: 13px;
+  }
+  
+  .website-label {
+    font-size: 13px;
+  }
+  
+  .website-url {
+    font-size: 11px;
   }
   
   .step-actions {

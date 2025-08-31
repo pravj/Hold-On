@@ -14,12 +14,18 @@
       <div class="stepper">
         <div class="step-item active" data-step="1">
           <div class="step-circle">1</div>
-          <span class="step-label">Welcome</span>
         </div>
         <div class="step-connector"></div>
         <div class="step-item" data-step="2">
           <div class="step-circle">2</div>
-          <span class="step-label">Interests</span>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-item" data-step="3">
+          <div class="step-circle">3</div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-item" data-step="4">
+          <div class="step-circle">4</div>
         </div>
       </div>
       
@@ -60,11 +66,10 @@
           <div class="value-prop">
             <div class="prop-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M9 12l2 2 4-4"/>
-                <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"/>
-                <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"/>
-                <path d="M13 12h3a2 2 0 0 1 2 2v1"/>
-                <path d="M11 12H8a2 2 0 0 0-2 2v1"/>
+                <path d="M3 3v5h5"/>
+                <path d="M3 8c0 1.5.5 3 1.5 4 1 1 2.5 1.5 4 1.5h.5c1.5 0 3-.5 4-1.5 1-1 1.5-2.5 1.5-4V3"/>
+                <path d="M21 21v-5h-5"/>
+                <path d="M21 16c0-1.5-.5-3-1.5-4-1-1-2.5-1.5-4-1.5h-.5c-1.5 0-3 .5-4 1.5-1 1-1.5 2.5-1.5 4v5"/>
               </svg>
             </div>
             <div class="prop-content">
@@ -83,7 +88,11 @@
       <div class="onboarding-step step-2" id="step2">
         <div class="step-header">
           <h2>What energizes you?</h2>
-          <p class="step-description">Choose activities you'd rather spend time on. We'll suggest these when you're about to get distracted.</p>
+          <p class="step-description">Choose activities you'd rather spend time on.<br>We'll suggest them when distraction hits.</p>
+        </div>
+        
+        <div class="selection-info">
+          <p class="selection-count">Select at least 3 • <span id="selectedCount">0</span> chosen</p>
         </div>
         
         <div class="interests-grid">
@@ -127,10 +136,6 @@
             <span class="interest-label">Creativity</span>
           </button>
           
-          <button class="interest-btn" data-interest="learning">
-            <span class="interest-icon">🧠</span>
-            <span class="interest-label">Learning</span>
-          </button>
           
           <button class="interest-btn" data-interest="others">
             <span class="interest-icon">🎯</span>
@@ -138,13 +143,144 @@
           </button>
         </div>
 
+        <div class="step-actions">
+          <button id="backToIntro" class="btn-secondary">Back</button>
+          <button id="nextToWebsites" class="btn-primary" disabled>Next: Select Websites</button>
+        </div>
+      </div>
+      
+      <!-- Step 3: Website Selection -->
+      <div class="onboarding-step step-3" id="step3">
+        <div class="step-header">
+          <h2>Which sites distract you most?</h2>
+          <p class="step-description">Select the websites where you tend to lose focus.<br>We'll help redirect your attention when you visit them.</p>
+        </div>
+        
         <div class="selection-info">
-          <p class="selection-count">Select up to 3 • <span id="selectedCount">0</span> chosen</p>
+          <p class="selection-count">Select any that apply • <span id="selectedWebsiteCount">0</span> chosen</p>
+        </div>
+        
+        <div class="websites-grid">
+          <button class="website-btn website-btn--others" id="addCustomWebsite">
+            <span class="website-icon">➕</span>
+            <span class="website-label">Others</span>
+            <span class="website-url">Add custom website</span>
+          </button>
+          
+          <button class="website-btn" data-website="instagram.com">
+            <img class="website-favicon" src="https://www.google.com/s2/favicons?domain=instagram.com&sz=32" alt="Instagram">
+            <span class="website-label">Instagram</span>
+            <span class="website-url">instagram.com</span>
+          </button>
+          
+          <button class="website-btn" data-website="youtube.com">
+            <img class="website-favicon" src="https://www.google.com/s2/favicons?domain=youtube.com&sz=32" alt="YouTube">
+            <span class="website-label">YouTube</span>
+            <span class="website-url">youtube.com</span>
+          </button>
+          
+          <button class="website-btn" data-website="facebook.com">
+            <img class="website-favicon" src="https://www.google.com/s2/favicons?domain=facebook.com&sz=32" alt="Facebook">
+            <span class="website-label">Facebook</span>
+            <span class="website-url">facebook.com</span>
+          </button>
+          
+          <button class="website-btn" data-website="tiktok.com">
+            <img class="website-favicon" src="https://www.google.com/s2/favicons?domain=tiktok.com&sz=32" alt="TikTok">
+            <span class="website-label">TikTok</span>
+            <span class="website-url">tiktok.com</span>
+          </button>
+          
+          <button class="website-btn" data-website="reddit.com">
+            <img class="website-favicon" src="https://www.google.com/s2/favicons?domain=reddit.com&sz=32" alt="Reddit">
+            <span class="website-label">Reddit</span>
+            <span class="website-url">reddit.com</span>
+          </button>
+          
+          <button class="website-btn" data-website="linkedin.com">
+            <img class="website-favicon" src="https://www.google.com/s2/favicons?domain=linkedin.com&sz=32" alt="LinkedIn">
+            <span class="website-label">LinkedIn</span>
+            <span class="website-url">linkedin.com</span>
+          </button>
+          
+          <button class="website-btn" data-website="x.com">
+            <img class="website-favicon" src="https://www.google.com/s2/favicons?domain=x.com&sz=32" alt="X (Twitter)">
+            <span class="website-label">X (Twitter)</span>
+            <span class="website-url">x.com</span>
+          </button>
+          
+          <button class="website-btn" data-website="netflix.com">
+            <img class="website-favicon" src="https://www.google.com/s2/favicons?domain=netflix.com&sz=32" alt="Netflix">
+            <span class="website-label">Netflix</span>
+            <span class="website-url">netflix.com</span>
+          </button>
+          
+          <button class="website-btn" data-website="pinterest.com">
+            <img class="website-favicon" src="https://www.google.com/s2/favicons?domain=pinterest.com&sz=32" alt="Pinterest">
+            <span class="website-label">Pinterest</span>
+            <span class="website-url">pinterest.com</span>
+          </button>
+        </div>
+        
+        <!-- Custom Website Modal -->
+        <div class="custom-website-modal" id="customWebsiteModal" style="display: none;">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3>Add Custom Website</h3>
+              <button class="modal-close" id="closeCustomModal">×</button>
+            </div>
+            <div class="modal-body">
+              <p class="modal-description">Enter the website URL you want to add to your blocked list:</p>
+              <input type="text" id="customWebsiteInput" placeholder="example.com or https://example.com" class="custom-input">
+              <div id="websitePreview" class="website-preview" style="display: none;">
+                <img class="preview-favicon" src="" alt="">
+                <div class="preview-info">
+                  <span class="preview-label"></span>
+                  <span class="preview-url"></span>
+                </div>
+              </div>
+            </div>
+            <div class="modal-actions">
+              <button id="cancelCustomWebsite" class="btn-secondary">Cancel</button>
+              <button id="addCustomWebsiteBtn" class="btn-primary" disabled>Add Website</button>
+            </div>
+          </div>
         </div>
 
         <div class="step-actions">
-          <button id="backToIntro" class="btn-secondary">Back</button>
-          <button id="finishOnboarding" class="btn-primary" disabled>Complete Setup</button>
+          <button id="backToInterests" class="btn-secondary">Back</button>
+          <button id="nextToConfirmation" class="btn-primary">Next: Review Setup</button>
+        </div>
+      </div>
+      
+      <!-- Step 4: Final Confirmation -->
+      <div class="onboarding-step step-4" id="step4">
+        <div class="step-header">
+          <h2>You're all set! 🎉</h2>
+          <p class="step-description">Your personalized focus assistant is ready to help you stay on track.</p>
+        </div>
+        
+        <div class="setup-summary">
+          <div class="summary-section">
+            <h3>Your Focus Activities</h3>
+            <div id="selectedInterestsSummary" class="summary-items"></div>
+          </div>
+          
+          <div class="summary-section">
+            <h3>Websites We'll Monitor</h3>
+            <div id="selectedWebsitesSummary" class="summary-items"></div>
+          </div>
+        </div>
+        
+        <div class="test-section">
+          <h3>Test Your Setup</h3>
+          <p class="test-description">Click on a blocked website below to see how Hold On will redirect you:</p>
+          <div id="testLinks" class="test-links"></div>
+        </div>
+
+        <div class="step-actions">
+          <button id="backToWebsites" class="btn-secondary">Back</button>
+          <button id="finishOnboarding" class="btn-primary">Start Using Hold On</button>
         </div>
       </div>
       

@@ -51,8 +51,8 @@ See a uptime % for your mental focus with visual insights such as how frequently
 
 ## Roadmap
 
-[ ] Privacy-focused local intervention slogan generation (using transformers.js or something else)
-[ ] Personas to generate Duolingo-style intervention slogans (i.e. asian mom, superheros, 
+- [ ] Privacy-focused local intervention slogan generation (using transformers.js or something else)
+- [ ] Personas to generate Duolingo-style intervention slogans (i.e. asian mom, superheros, 
 
 ## 🤝 Contributing
 

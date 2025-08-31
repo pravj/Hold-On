@@ -4,6 +4,8 @@
 
 A browswer extension that helps you reclaim focus by intercepting visits to distracting websites and gently redirecting your attention toward meaningful activities.
 
+![Hold On Intervention Page](extension/assets/Hold-On-Intervention.png)
+
 ## 🌟 Features
 
 ### ⏸️ Mindful Interventions

@@ -67,3 +67,5 @@ Here's how you can help:
 
 Having issues or questions?: Please create [issue](https://github.com/pravj/hold-on/issues)
 
+## Reference
+[Scaling Synthetic Data Creation with 1,000,000,000 Personas](https://arxiv.org/pdf/2406.20094)

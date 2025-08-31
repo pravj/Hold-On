@@ -280,9 +280,21 @@ async function displayFocusMetrics() {
   const minutes = await calculateTodayTimeSpent();
   const wastedHours = minutes / 60;
   
-  // Calculate focus uptime (17 waking hours - 7 sleep hours)
-  const totalWakingHours = 17;
-  const uptime = Math.max(0, ((totalWakingHours - wastedHours) / totalWakingHours) * 100);
+  // Calculate hours passed since start of day
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const hoursPassedSinceStart = (now - todayStart) / (1000 * 60 * 60);
+  
+  // Dynamic denominator: use elapsed hours until 17 hours have passed, then cap at 17
+  let totalAvailableHours;
+  if (hoursPassedSinceStart >= 17) {
+    totalAvailableHours = 17;  // Cap at 17 hours max
+  } else {
+    totalAvailableHours = hoursPassedSinceStart;  // Use actual elapsed time
+  }
+  
+  // Calculate focus uptime with dynamic denominator
+  const uptime = Math.max(0, ((totalAvailableHours - wastedHours) / totalAvailableHours) * 100);
   
   // Display uptime percentage
   const uptimeValueElement = document.getElementById('focusUptimeValue');
@@ -291,6 +303,8 @@ async function displayFocusMetrics() {
   } else {
     console.error('❌ focusUptimeValue element not found in DOM');
   }
+  
+  console.log(`📊 Focus metrics: ${minutes}min wasted, ${hoursPassedSinceStart.toFixed(1)}h elapsed, ${totalAvailableHours.toFixed(1)}h available, ${uptime.toFixed(2)}% uptime`);
   
   // Generate craving spikes bars for focus uptime visualization
   generateCravingSpikes();
